@@ -1,0 +1,363 @@
+/* ==========================================================================
+   HERO SECTION — DC Power
+   Pure CSS animations only (no JS/GSAP). Layout: text left, illustration
+   right on desktop; stacked on mobile.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  padding: 96px 0 100px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* --------------------------------------------------------------------------
+   Background: grid pattern + glowing blurred blobs
+   -------------------------------------------------------------------------- */
+.hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 42px 42px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 70% 20%, black 10%, transparent 70%);
+  mask-image: radial-gradient(ellipse 70% 60% at 70% 20%, black 10%, transparent 70%);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.hero-bg-glow {
+  position: absolute;
+  z-index: 0;
+  border-radius: 50%;
+  filter: blur(70px);
+  pointer-events: none;
+  opacity: 0.35;
+  animation: hero-glow-drift 10s ease-in-out infinite;
+}
+.hero-bg-glow--gold {
+  width: 420px;
+  height: 420px;
+  top: -120px;
+  right: -80px;
+  background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+}
+.hero-bg-glow--blue {
+  width: 380px;
+  height: 380px;
+  bottom: -140px;
+  left: -100px;
+  background: radial-gradient(circle, var(--blue) 0%, transparent 70%);
+  animation-delay: -5s;
+}
+
+@keyframes hero-glow-drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-16px, 14px) scale(1.08); }
+}
+
+/* --------------------------------------------------------------------------
+   Layout
+   -------------------------------------------------------------------------- */
+.hero-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+/* --------------------------------------------------------------------------
+   Copy: staggered CSS entrance animation
+   -------------------------------------------------------------------------- */
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hero-anim {
+  opacity: 0;
+  animation: hero-fade-up 0.7s var(--ease) forwards;
+}
+.hero-anim--1 { animation-delay: 0.05s; }
+.hero-anim--2 { animation-delay: 0.15s; }
+.hero-anim--3 { animation-delay: 0.25s; }
+.hero-anim--4 { animation-delay: 0.35s; }
+.hero-anim--5 { animation-delay: 0.45s; }
+
+.hero h1 {
+  font-size: clamp(2.2rem, 3.6vw, 3.3rem);
+  font-weight: 700;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+.hero-gradient-text {
+  background: linear-gradient(100deg, var(--gold) 0%, #ffd77a 45%, var(--gold) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p.lead {
+  margin-top: 22px;
+  font-size: 1.06rem;
+  color: var(--text-muted);
+  max-width: 46ch;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 14px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}
+
+.hero-btn-primary {
+  position: relative;
+  box-shadow: 0 4px 18px rgba(242, 169, 59, 0.25);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), background 0.2s var(--ease);
+}
+.hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(242, 169, 59, 0.45);
+}
+
+.hero-btn-ghost {
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.hero-btn-ghost:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 22px rgba(59, 167, 242, 0.25);
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+/* --------------------------------------------------------------------------
+   Stat cards: subtle glassmorphism
+   -------------------------------------------------------------------------- */
+.stat-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 48px;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  flex: 1 1 140px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease);
+}
+.stat-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(242, 169, 59, 0.35);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.stat-num {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   ILLUSTRATION — isometric smart-home solar system
+   Sun -> Solar panels -> Inverter -> Battery -> House
+   ========================================================================== */
+
+.hero-art-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-art {
+  position: relative;
+  aspect-ratio: 600 / 640;
+  animation: hero-float 6s ease-in-out infinite;
+}
+
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.hero-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* decorative static circuitry */
+.trace-line--dim {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1.5;
+}
+
+/* orbit rings around the sun */
+.hero-orbit {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hero-spin 20s linear infinite;
+}
+.hero-orbit--reverse {
+  animation-direction: reverse;
+  animation-duration: 28s;
+}
+.hero-orbit-ring {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1;
+  stroke-dasharray: 2 9;
+  opacity: 0.4;
+}
+.hero-orbit-ring--faint {
+  stroke: var(--blue);
+  opacity: 0.28;
+}
+@keyframes hero-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* pulsing sun glow */
+.hero-sun-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: hero-sun-pulse 2.6s ease-in-out infinite;
+}
+@keyframes hero-sun-pulse {
+  0%, 100% { opacity: 0.75; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.07); }
+}
+
+/* glowing windows */
+.hero-window {
+  filter: drop-shadow(0 0 5px rgba(242, 199, 102, 0.8));
+  animation: hero-window-glow 3.4s ease-in-out infinite;
+}
+.hero-window--delay {
+  animation-delay: 1.4s;
+}
+@keyframes hero-window-glow {
+  0%, 100% { opacity: 0.75; }
+  50%      { opacity: 1; }
+}
+
+/* inverter / battery indicator LEDs, staggered blink */
+.hero-led {
+  fill: #4ade80;
+  animation: hero-led-blink 1.8s ease-in-out infinite;
+}
+.hero-led--a { animation-delay: 0s; }
+.hero-led--b { animation-delay: 0.3s; }
+.hero-led--c { animation-delay: 0.6s; }
+@keyframes hero-led-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.25; }
+}
+
+/* energy flow lines */
+.flow-line {
+  fill: none;
+  stroke-width: 2.4;
+  stroke-dasharray: 6 8;
+  animation: hero-flow 1.3s linear infinite;
+}
+.flow-line--solar {
+  stroke: var(--gold);
+  opacity: 0.75;
+}
+.flow-line--electric {
+  stroke: var(--blue);
+  opacity: 0.7;
+}
+@keyframes hero-flow {
+  to { stroke-dashoffset: -56; }
+}
+
+/* traveling energy particles — pure CSS motion path */
+.hero-particle {
+  offset-rotate: 0deg;
+  animation: hero-particle-move 2s linear infinite;
+}
+.hero-particle--solar {
+  fill: var(--gold);
+  offset-path: path('M452,140 L387,423.5');
+}
+.hero-particle--e1 {
+  fill: var(--blue);
+  offset-path: path('M387,423.5 L447,564.1');
+  animation-delay: 0.5s;
+}
+.hero-particle--e2 {
+  fill: var(--blue);
+  offset-path: path('M438,592.6 L171,474.9');
+  animation-delay: 1s;
+}
+.hero-particle--e3 {
+  fill: #4ade80;
+  offset-path: path('M162,517.8 L264,529.2');
+  animation-delay: 1.5s;
+}
+@keyframes hero-particle-move {
+  0%   { offset-distance: 0%;   opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { offset-distance: 100%; opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-anim { animation: none; opacity: 1; }
+  .hero-bg-glow,
+  .hero-art,
+  .hero-orbit,
+  .hero-sun-pulse,
+  .hero-window,
+  .hero-led,
+  .flow-line,
+  .hero-particle {
+    animation: none !important;
+  }
+  .hero-particle { opacity: 0; }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 960px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-art-wrap {
+    max-width: 460px;
+    margin: 0 auto;
+    order: -1;
+  }
+}
+
+@media (max-width: 560px) {
+  .stat-row {
+    gap: 12px;
+  }
+  .stat-card {
+    flex: 1 1 100%;
+  }
+}

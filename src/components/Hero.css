@@ -1,0 +1,178 @@
+/* ==========================================================================
+   HERO SECTION — DC Power
+   Full-bleed background video with a dark overlay for text contrast,
+   headline/CTA on top, stats strip below in normal page flow.
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  min-height: 640px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(8, 14, 24, 0.72) 0%,
+    rgba(8, 14, 24, 0.6) 45%,
+    rgba(8, 14, 24, 0.82) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 120px 28px 90px;
+  max-width: 760px;
+}
+
+/* --------------------------------------------------------------------------
+   Text entrance animation
+   -------------------------------------------------------------------------- */
+@keyframes hero-fade-up {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.hero-anim {
+  opacity: 0;
+  animation: hero-fade-up 0.7s var(--ease) forwards;
+}
+.hero-anim--1 { animation-delay: 0.05s; }
+.hero-anim--2 { animation-delay: 0.15s; }
+.hero-anim--3 { animation-delay: 0.25s; }
+.hero-anim--4 { animation-delay: 0.35s; }
+
+.hero-eyebrow {
+  background: rgba(224, 141, 28, 0.16);
+  border-color: rgba(224, 141, 28, 0.4);
+}
+
+.hero h1 {
+  color: #fff;
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.hero-gradient-text {
+  background: linear-gradient(100deg, #f2b448 0%, #ffd77a 45%, #f2b448 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero p.lead {
+  margin-top: 22px;
+  font-size: 1.08rem;
+  color: rgba(255, 255, 255, 0.82);
+  max-width: 50ch;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 14px;
+  margin-top: 34px;
+  flex-wrap: wrap;
+}
+
+.hero-btn-primary {
+  box-shadow: 0 4px 20px rgba(224, 141, 28, 0.35);
+}
+.hero-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(224, 141, 28, 0.5);
+}
+
+.hero-btn-ghost {
+  border-color: rgba(255, 255, 255, 0.5);
+  color: #fff;
+}
+.hero-btn-ghost:hover {
+  transform: translateY(-2px);
+  border-color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* --------------------------------------------------------------------------
+   Stats strip — sits below the video in normal page flow
+   -------------------------------------------------------------------------- */
+.hero-stats-bar {
+  position: relative;
+  z-index: 2;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+}
+
+.stat-card {
+  padding: 28px 20px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.stat-card:last-child {
+  border-right: none;
+}
+
+.stat-num {
+  font-size: 1.7rem;
+  font-weight: 500;
+  color: var(--gold);
+  letter-spacing: -0.01em;
+}
+.stat-label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   Reduced motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .hero-anim { animation: none; opacity: 1; }
+  .hero-video { display: none; }
+  .hero-overlay { background: rgba(8, 14, 24, 0.85); }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 760px) {
+  .stat-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .stat-card:nth-child(2) {
+    border-right: none;
+  }
+  .stat-card:nth-child(1),
+  .stat-card:nth-child(2) {
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 560px) {
+  .hero-content {
+    padding: 100px 24px 70px;
+  }
+}

@@ -1,0 +1,132 @@
+.calc-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px 44px;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.calc-head h3 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-top: 2px;
+}
+.calc-head p {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  margin-top: 10px;
+  max-width: 56ch;
+}
+
+.calc-mode-toggle {
+  display: inline-flex;
+  margin-top: 24px;
+  padding: 4px;
+  border-radius: 9px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+}
+
+.calc-mode-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+.calc-mode-btn.active {
+  background: var(--gold);
+  color: #1a1206;
+}
+
+.calc-card .field {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+.calc-card .field label {
+  display: block;
+  font-size: 0.83rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+.calc-card .field input {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.2s var(--ease);
+}
+.calc-card .field input:focus {
+  border-color: var(--gold);
+  outline: none;
+}
+
+.calc-result {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+  opacity: 0.4;
+  transition: opacity 0.25s var(--ease);
+}
+.calc-result.show {
+  opacity: 1;
+}
+
+.calc-result-main {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.calc-result-num {
+  font-size: 2.4rem;
+  font-weight: 500;
+  color: var(--gold);
+  line-height: 1;
+}
+.calc-result-unit {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+.calc-result-grid {
+  display: flex;
+  gap: 32px;
+  margin-top: 18px;
+  flex-wrap: wrap;
+}
+.calc-result-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.calc-result-sub {
+  font-size: 1.15rem;
+  color: var(--text);
+}
+.calc-result-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.calc-note {
+  margin-top: 18px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 680px) {
+  .calc-card {
+    padding: 28px 22px;
+  }
+}
