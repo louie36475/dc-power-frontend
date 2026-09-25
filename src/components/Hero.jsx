@@ -2,13 +2,15 @@ import './Hero.css';
 
 export default function Hero() {
   return (
+    <>
     <section className="hero" id="home">
       <video className="hero-video" autoPlay muted loop playsInline>
         <source src="/hero-video.mp4" type="video/mp4" />
       </video>
       <div className="hero-overlay" />
 
-      <div className="wrap hero-content">
+      <div className="wrap">
+        <div className="hero-content">
         <div className="eyebrow hero-eyebrow hero-anim hero-anim--1">
           <span className="dot" />
           NOW BOOKING Q4 INSTALLS
@@ -34,28 +36,30 @@ export default function Hero() {
             See how it works
           </a>
         </div>
-      </div>
-
-      <div className="hero-stats-bar">
-        <div className="wrap stat-row">
-          <div className="stat-card">
-            <div className="stat-num mono">500+ kWp</div>
-            <div className="stat-label">installed capacity</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-num mono">1,200+</div>
-            <div className="stat-label">homes &amp; businesses powered</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-num mono">8 yrs</div>
-            <div className="stat-label">in the field</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-num mono">1–3 days</div>
-            <div className="stat-label">typical install time</div>
-          </div>
         </div>
       </div>
     </section>
+
+    <div className="hero-stats-bar">
+      <div className="wrap stat-row">
+        <div className="stat-card">
+          <div className="stat-num mono">500+ kWp</div>
+          <div className="stat-label">installed capacity</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-num mono">1,200+</div>
+          <div className="stat-label">homes &amp; businesses powered</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-num mono">8 yrs</div>
+          <div className="stat-label">in the field</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-num mono">1–3 days</div>
+          <div className="stat-label">typical install time</div>
+        </div>
+      </div>
+    </div>
+    </>
   );
 }

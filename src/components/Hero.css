@@ -37,7 +37,7 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 120px 28px 90px;
+  padding: 120px 0 90px;
   max-width: 760px;
 }
 
@@ -115,7 +115,6 @@
 .hero-stats-bar {
   position: relative;
   z-index: 2;
-  background: var(--surface);
   border-bottom: 1px solid var(--border);
 }
 
@@ -173,6 +172,6 @@
 
 @media (max-width: 560px) {
   .hero-content {
-    padding: 100px 24px 70px;
+    padding: 100px 0 70px;
   }
 }

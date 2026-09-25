@@ -7,31 +7,32 @@
 
 /* transparent, over the hero video, before scrolling */
 .header.transparent {
-  background: transparent;
-  border-bottom: 1px solid transparent;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
 }
 .header.transparent .nav-links a:not(.btn),
 .header.transparent .brand,
 .header.transparent .nav-dropdown-trigger,
 .header.transparent .menu-toggle {
-  color: #fff;
+  color: var(--text);
 }
 .header.transparent .nav-links a:not(.btn):hover {
-  color: #fff;
-  opacity: 0.75;
+  color: var(--gold);
 }
 
-/* solid dark blue, once scrolled (or on any non-home page) */
+/* solid, matching the page's own background once scrolled or on any
+   non-home page — the nav adapts to whatever theme the page is using
+   rather than staying a fixed color */
 .header.solid {
-  background: #0f2a4a;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px rgba(10, 20, 35, 0.15);
+  background: #ffffff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 20px rgba(10, 20, 35, 0.08);
 }
 .header.solid .nav-links a:not(.btn),
 .header.solid .brand,
 .header.solid .nav-dropdown-trigger,
 .header.solid .menu-toggle {
-  color: #fff;
+  color: var(--text);
 }
 .header.solid .nav-links a:not(.btn):hover {
   color: var(--gold);
@@ -134,25 +135,30 @@
   transition: background 0.15s var(--ease);
 }
 .nav-dropdown-menu a:hover {
-  background: var(--surface-2);
+  background: #f2f2f2;
   color: var(--text) !important;
 }
 
 @media (max-width: 680px) {
-  .header.transparent,
+  .header.transparent {
+    background: #ffffff;
+    border-bottom: 1px solid var(--border);
+  }
   .header.solid {
-    background: #0f2a4a;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
   }
   .header.transparent .nav-links a:not(.btn),
-  .header.solid .nav-links a:not(.btn),
   .header.transparent .brand,
-  .header.solid .brand,
   .header.transparent .nav-dropdown-trigger,
+  .header.transparent .menu-toggle {
+    color: var(--text);
+  }
+  .header.solid .nav-links a:not(.btn),
+  .header.solid .brand,
   .header.solid .nav-dropdown-trigger,
-  .header.transparent .menu-toggle,
   .header.solid .menu-toggle {
-    color: #fff;
+    color: var(--text);
   }
 
   .nav-links {
@@ -161,15 +167,20 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: #0f2a4a;
     flex-direction: column;
     align-items: flex-start;
     padding: 28px;
     gap: 22px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--border);
     transform: translateX(100%);
     transition: transform 0.28s var(--ease);
     overflow-y: auto;
+  }
+  .header.transparent .nav-links {
+    background: #ffffff;
+  }
+  .header.solid .nav-links {
+    background: var(--surface);
   }
   .nav-links.open {
     transform: translateX(0);
@@ -185,20 +196,31 @@
     visibility: visible;
     box-shadow: none;
     border: none;
-    background: rgba(255, 255, 255, 0.06);
     display: none;
     min-width: 0;
     margin-top: 8px;
     width: 100%;
   }
+  .header.transparent .nav-dropdown-menu {
+    background: #f2f2f2;
+  }
+  .header.solid .nav-dropdown-menu {
+    background: #f2f2f2;
+  }
   .nav-dropdown.open .nav-dropdown-menu {
     display: flex;
     transform: none;
   }
-  .nav-dropdown-menu a {
-    color: #fff !important;
+  .header.transparent .nav-dropdown-menu a {
+    color: var(--text) !important;
   }
-  .nav-dropdown-menu a:hover {
-    background: rgba(255, 255, 255, 0.1);
+  .header.transparent .nav-dropdown-menu a:hover {
+    background: var(--border);
   }
-}
+  .header.solid .nav-dropdown-menu a {
+    color: var(--text) !important;
+  }
+  .header.solid .nav-dropdown-menu a:hover {
+    background: var(--border);
+  }
+}  
