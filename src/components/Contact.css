@@ -130,3 +130,44 @@
     gap: 16px;
   }
 }
+
+/* --------------------------------------------------------------------------
+   Calculator estimate shown inside the quote form
+   -------------------------------------------------------------------------- */
+.quote-estimate {
+  margin-top: 22px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  background: var(--bg);
+}
+.quote-estimate-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.quote-estimate-grid {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.quote-estimate-grid > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.quote-estimate-num {
+  font-size: 1.05rem;
+  color: var(--text);
+}
+.quote-estimate-label {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+.quote-estimate-hint {
+  margin-top: 18px;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+}

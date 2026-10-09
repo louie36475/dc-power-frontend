@@ -89,21 +89,25 @@ const SERVICES = [
     title: 'Solar installation',
     desc: 'Rooftop panel systems sized to your actual usage and installed by our own crew — never subcontracted out.',
     icon: <SunIcon />,
+    image: null, // e.g. '/images/solar-installation.jpg'
   },
   {
     title: 'Battery storage',
     desc: 'Store daytime sun for nighttime use, or hold enough charge to ride out a brownout without noticing it.',
     icon: <img src={plugIcon} alt="" className="service-icon" />,
+    image: null, // e.g. '/images/battery-storage.jpg'
   },
   {
     title: 'Automatic backup',
     desc: 'Whole-home backup that switches on the instant the grid drops — no manual transfer switch, no generator startup.',
     icon: <HouseIcon />,
+    image: null, // e.g. '/images/automatic-backup.jpg'
   },
   {
     title: 'Right-sizing & consulting',
     desc: "We'd rather undersell you a system that pays for itself than oversell one that doesn't. Every quote shows the math.",
     icon: <img src={leafIcon} alt="" className="service-icon" />,
+    image: null, // e.g. '/images/consulting.jpg'
   },
 ];
 
@@ -111,21 +115,33 @@ export default function Services() {
   const gridRef = useRef(null);
 
   useEffect(() => {
-    const cards = gridRef.current.querySelectorAll('.service-card');
-    const anim = gsap.from(cards, {
-      y: 24,
-      opacity: 0,
-      duration: 0.6,
-      stagger: 0.1,
-      ease: 'power3.out',
-      scrollTrigger: {
-        trigger: gridRef.current,
-        start: 'top 82%',
-      },
-    });
+    // gsap.context + revert() cleans up fully, so cards can never be left
+    // stuck invisible (React dev mode runs effects twice, which breaks a
+    // plain gsap.from()). fromTo() sets the end state explicitly.
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.service-card',
+        { y: 24, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: gridRef.current, start: 'top 88%', once: true },
+        }
+      );
+    }, gridRef);
+
+    // fonts/images loading can shift the layout, so recalculate trigger positions
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener('load', refresh);
+    const timer = setTimeout(refresh, 300);
+
     return () => {
-      anim.scrollTrigger?.kill();
-      anim.kill();
+      window.removeEventListener('load', refresh);
+      clearTimeout(timer);
+      ctx.revert();
     };
   }, []);
 
@@ -144,6 +160,7 @@ export default function Services() {
         <div className="service-grid" ref={gridRef}>
           {SERVICES.map((s) => (
             <div className="service-card" key={s.title}>
+              {s.image && <img src={s.image} alt={s.title} className="service-photo" />}
               {s.icon}
               <h3>{s.title}</h3>
               <p>{s.desc}</p>

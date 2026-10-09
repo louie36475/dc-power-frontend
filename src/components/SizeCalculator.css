@@ -27,7 +27,6 @@
   background: var(--bg);
   border: 1px solid var(--border);
 }
-
 .calc-mode-btn {
   border: none;
   background: transparent;
@@ -55,7 +54,7 @@
   margin-bottom: 8px;
   font-weight: 500;
 }
-.calc-card .field input {
+.calc-card .field input[type='text'] {
   width: 100%;
   background: var(--bg);
   border: 1px solid var(--border-strong);
@@ -66,11 +65,89 @@
   font-size: 0.95rem;
   transition: border-color 0.2s var(--ease);
 }
-.calc-card .field input:focus {
+.calc-card .field input[type='text']:focus {
   border-color: var(--gold);
   outline: none;
 }
 
+/* --------------------------------------------------------------------------
+   Day / night usage slider
+   -------------------------------------------------------------------------- */
+.calc-slider-field {
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.calc-slider {
+  width: 100%;
+  margin-top: 14px;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 4px;
+  background: var(--border-strong);
+  outline: none;
+}
+.calc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--surface);
+  box-shadow: 0 0 0 1px var(--border-strong);
+  cursor: pointer;
+}
+.calc-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: 2px solid var(--surface);
+  cursor: pointer;
+}
+
+.calc-split-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 100px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+.calc-split-day {
+  background: var(--gold);
+  transition: width 0.2s var(--ease);
+}
+.calc-split-night {
+  background: var(--blue);
+  transition: width 0.2s var(--ease);
+}
+
+.calc-split-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.calc-split-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.calc-split-dot--day {
+  background: var(--gold);
+}
+.calc-split-dot--night {
+  background: var(--blue);
+}
+
+/* --------------------------------------------------------------------------
+   Result
+   -------------------------------------------------------------------------- */
 .calc-result {
   margin-top: 24px;
   padding-top: 24px;
@@ -116,6 +193,68 @@
 .calc-result-label {
   font-size: 0.8rem;
   color: var(--text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   Battery recommendation box
+   -------------------------------------------------------------------------- */
+.calc-battery-box {
+  margin-top: 22px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+}
+.calc-battery-box--low {
+  border-left: 3px solid var(--text-muted);
+}
+.calc-battery-box--mid {
+  border-left: 3px solid var(--gold);
+}
+.calc-battery-box--high {
+  border-left: 3px solid var(--blue);
+}
+
+.calc-battery-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.calc-battery-tier {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 3px 10px;
+  border-radius: 100px;
+}
+.calc-battery-box--low .calc-battery-tier {
+  background: var(--border);
+  color: var(--text-muted);
+}
+.calc-battery-box--mid .calc-battery-tier {
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+.calc-battery-box--high .calc-battery-tier {
+  background: rgba(31, 116, 199, 0.12);
+  color: var(--blue);
+}
+
+.calc-battery-size {
+  font-size: 1.1rem;
+  color: var(--text);
+  margin-top: 8px;
+}
+
+.calc-battery-note {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  margin-top: 8px;
+  line-height: 1.5;
 }
 
 .calc-note {
