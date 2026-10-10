@@ -6,8 +6,9 @@ import './Gallery.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// The folder inside your project's "public" folder where the photos live
-const FOLDER = '/public/';
+// Where the photos are inside your project's "public" folder.
+// '/' = directly in public. Use '/images/' only if you move them into public/images
+const FOLDER = '/';
 
 // One line per photo. "caption" is optional: add text like
 // 'Urdaneta, Pangasinan · 6.4 kWp' to show it on that photo, or leave it ''.
