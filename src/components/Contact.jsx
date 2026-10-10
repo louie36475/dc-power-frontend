@@ -10,7 +10,7 @@ const ACCESS_KEY = '1d65e651-b3e4-4d3c-a73f-88256621d203';
 // Contact details shown at the bottom of the section
 const PHONE_DISPLAY = '+63 900 000 0000';
 const PHONE_LINK = '+639000000000'; // digits only, no spaces
-const EMAIL = 'hello@dcpower.ph';
+const EMAIL = 'dcpowersolar@gmail.com';
 // ======================================================
 
 export default function Contact() {
