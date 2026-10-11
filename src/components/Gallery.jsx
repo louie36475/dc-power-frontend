@@ -6,42 +6,73 @@ import './Gallery.css';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Where the photos are inside your project's "public" folder.
-// '/' = directly in public. Use '/images/' only if you move them into public/images
+// Nasaan ang photos sa "public" folder. '/' = directly sa public.
 const FOLDER = '/';
 
-// One line per photo. "caption" is optional: add text like
-// 'Urdaneta, Pangasinan · 6.4 kWp' to show it on that photo, or leave it ''.
-const PHOTOS = [
-  { file: 'image 1.png', type: 'Inverter & battery', caption: '' },
-  { file: 'image 2.png', type: 'Inverter & battery', caption: '' },
-  { file: 'image 3.png', type: 'Inverter & battery', caption: '' },
-  { file: 'image 4.png', type: 'Inverter & battery', caption: '' },
-  { file: 'image 5.png', type: 'Inverter & battery', caption: '' },
-  { file: 'image 6.png', type: 'Inverter & battery', caption: '' },
-  { file: 'image 7.png', type: 'Inverter & battery', caption: '' },
-  { file: 'image 8.png', type: 'Rooftop panels', caption: '' },
-  { file: 'image 9.png', type: 'Rooftop panels', caption: '' },
-  { file: 'image 10.png', type: 'Rooftop panels', caption: '' },
-  { file: 'image 11.png', type: 'Rooftop panels', caption: '' },
-  { file: 'image 12.png', type: 'Rooftop panels', caption: '' },
+// Placeholder specs. Palitan mo kada project ng totoong details.
+// Kung ayaw mong ulit-ulitin, pwede mong palitan ang `specs` ng sariling list.
+const DEFAULT_SPECS = [
+  { label: 'Inverter', value: 'Isulat dito' },
+  { label: 'Panels', value: 'Isulat dito' },
+  { label: 'Battery', value: 'Isulat dito' },
+  { label: 'Location', value: 'Lokasyon, Siyudad' },
+  { label: 'Duration', value: '1 Day' },
+  { label: 'Commissioned', value: 'Buwan Araw, Taon' },
 ];
+
+const DEFAULT_ABOUT =
+  'Isulat dito ang maikling kwento ng project: ano ang kailangan ng client, anong system ang ni-install, at ano ang naging resulta.';
+
+// ---------------------------------------------------------------------------
+// Isang block = isang project card. Para magdagdag ng pictures sa isang
+// project, idagdag lang sa `photos`, hal.  photos: ['image 1.png', 'image 13.png']
+// Yung unang photo ang cover sa grid.
+// ---------------------------------------------------------------------------
+const PROJECTS = [
+  { id: 'project-1',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 1',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 1.png'] },
+  { id: 'project-2',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 2',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 2.png'] },
+  { id: 'project-3',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 3',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 3.png'] },
+  { id: 'project-4',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 4',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 4.png'] },
+  { id: 'project-5',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 5',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 5.png'] },
+  { id: 'project-6',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 6',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 6.png'] },
+  { id: 'project-7',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 7',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 7.png'] },
+  { id: 'project-8',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 1',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 8.png'] },
+  { id: 'project-9',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 2',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 9.png'] },
+  { id: 'project-10', badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 3',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 10.png'] },
+  { id: 'project-11', badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 4',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 11.png'] },
+  { id: 'project-12', badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 5',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 12.png'] },
+];
+
+const src = (file) => encodeURI(FOLDER + file);
 
 export default function Gallery() {
   const gridRef = useRef(null);
-  const [active, setActive] = useState(null); // index of the enlarged photo, or null
+  const thumbsRef = useRef(null);
+  const [activeProject, setActiveProject] = useState(null); // index or null
+  const [activePhoto, setActivePhoto] = useState(0);
 
-  const close = () => setActive(null);
-  const next = () => setActive((i) => (i + 1) % PHOTOS.length);
-  const prev = () => setActive((i) => (i - 1 + PHOTOS.length) % PHOTOS.length);
+  const project = activeProject !== null ? PROJECTS[activeProject] : null;
 
-  // While a photo is enlarged: Esc closes, arrow keys flip, page scroll is locked
+  const openProject = (i) => {
+    setActiveProject(i);
+    setActivePhoto(0);
+  };
+  const close = () => setActiveProject(null);
+
+  const nextPhoto = () =>
+    setActivePhoto((i) => (project ? (i + 1) % project.photos.length : 0));
+  const prevPhoto = () =>
+    setActivePhoto((i) =>
+      project ? (i - 1 + project.photos.length) % project.photos.length : 0
+    );
+
+  // Habang bukas ang modal: Esc = close, arrow keys = palit photo, naka-lock ang scroll ng page
   useEffect(() => {
-    if (active === null) return;
+    if (activeProject === null) return;
     const onKey = (e) => {
       if (e.key === 'Escape') close();
-      if (e.key === 'ArrowRight') next();
-      if (e.key === 'ArrowLeft') prev();
+      if (e.key === 'ArrowRight') nextPhoto();
+      if (e.key === 'ArrowLeft') prevPhoto();
     };
     window.addEventListener('keydown', onKey);
     const oldOverflow = document.body.style.overflow;
@@ -50,11 +81,16 @@ export default function Gallery() {
       window.removeEventListener('keydown', onKey);
       document.body.style.overflow = oldOverflow;
     };
-  }, [active]);
+  }, [activeProject]);
+
+  // I-scroll yung thumbnail strip para laging kita yung napiling photo
+  useEffect(() => {
+    if (activeProject === null || !thumbsRef.current) return;
+    const el = thumbsRef.current.querySelector('.pm-thumb.active');
+    if (el) el.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'smooth' });
+  }, [activePhoto, activeProject]);
 
   useEffect(() => {
-    // gsap.context + revert() cleans up fully, so tiles can never be left
-    // stuck invisible. fromTo() sets the end state explicitly.
     const ctx = gsap.context(() => {
       gsap.fromTo(
         '.gallery-item',
@@ -92,68 +128,114 @@ export default function Gallery() {
         </div>
 
         <div className="gallery-grid" ref={gridRef}>
-          {PHOTOS.map((p, i) => (
+          {PROJECTS.map((p, i) => (
             <figure
               className="gallery-item"
-              key={p.file}
+              key={p.id}
               role="button"
               tabIndex={0}
-              aria-label={`View ${p.type} photo ${i + 1} larger`}
-              onClick={() => setActive(i)}
+              aria-label={`View details of ${p.title}`}
+              onClick={() => openProject(i)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  setActive(i);
+                  openProject(i);
                 }
               }}
             >
               <img
-                src={encodeURI(FOLDER + p.file)}
-                alt={`${p.type} installation ${i + 1}`}
+                src={src(p.photos[0])}
+                alt={p.title}
                 className="gallery-img"
                 loading="lazy"
                 decoding="async"
               />
               <figcaption className="info">
-                <div className="kwp mono">{p.type}</div>
-                {p.caption && <div className="place">{p.caption}</div>}
+                <div className="kwp mono">{p.badge} · {p.place}</div>
+                <div className="place">{p.title}</div>
               </figcaption>
             </figure>
           ))}
         </div>
       </div>
 
-      {active !== null &&
+      {project &&
         createPortal(
-          <div className="lightbox" onClick={close} role="dialog" aria-modal="true" aria-label="Photo viewer">
-            <button type="button" className="lightbox-close" onClick={close} aria-label="Close">
-              ×
-            </button>
-            <button
-              type="button"
-              className="lightbox-nav lightbox-prev"
-              onClick={(e) => { e.stopPropagation(); prev(); }}
-              aria-label="Previous photo"
-            >
-              ‹
-            </button>
-            <img
-              className="lightbox-img"
-              src={encodeURI(FOLDER + PHOTOS[active].file)}
-              alt={`${PHOTOS[active].type} installation ${active + 1}`}
+          <div className="pm-overlay" onClick={close}>
+            <div
+              className="pm-modal"
+              role="dialog"
+              aria-modal="true"
+              aria-label={project.title}
               onClick={(e) => e.stopPropagation()}
-            />
-            <button
-              type="button"
-              className="lightbox-nav lightbox-next"
-              onClick={(e) => { e.stopPropagation(); next(); }}
-              aria-label="Next photo"
             >
-              ›
-            </button>
-            <div className="lightbox-caption">
-              {PHOTOS[active].type}
-              {PHOTOS[active].caption ? ` · ${PHOTOS[active].caption}` : ''} — {active + 1} / {PHOTOS.length}
+              {/* Header */}
+              <div className="pm-header">
+                <div className="pm-header-text">
+                  <div className="pm-meta">
+                    <span className="pm-badge">{project.badge}</span>
+                    <span className="pm-place">{project.place}</span>
+                  </div>
+                  <h3 className="pm-title">{project.title}</h3>
+                </div>
+                <button type="button" className="pm-close" onClick={close} aria-label="Close">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="pm-body">
+                {/* Kaliwa: photos */}
+                <div className="pm-left">
+                  <div className="pm-stage">
+                    <img
+                      className="pm-main-img"
+                      src={src(project.photos[activePhoto])}
+                      alt={`${project.title} – photo ${activePhoto + 1}`}
+                    />
+                    {project.photos.length > 1 && (
+                      <>
+                        <button type="button" className="pm-arrow pm-arrow-prev" onClick={prevPhoto} aria-label="Previous photo">‹</button>
+                        <button type="button" className="pm-arrow pm-arrow-next" onClick={nextPhoto} aria-label="Next photo">›</button>
+                      </>
+                    )}
+                  </div>
+
+                  {project.photos.length > 1 && (
+                    <div className="pm-thumbs" ref={thumbsRef}>
+                      {project.photos.map((file, i) => (
+                        <button
+                          type="button"
+                          key={file}
+                          className={`pm-thumb ${i === activePhoto ? 'active' : ''}`}
+                          onClick={() => setActivePhoto(i)}
+                          aria-label={`Show photo ${i + 1}`}
+                        >
+                          <img src={src(file)} alt="" loading="lazy" />
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Kanan: details */}
+                <div className="pm-right">
+                  <div className="pm-specs">
+                    <h4 className="pm-heading">System Specifications</h4>
+                    {project.specs.map((s) => (
+                      <div className="pm-spec" key={s.label}>
+                        <div className="pm-spec-label">{s.label}</div>
+                        <div className="pm-spec-value">{s.value}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <h4 className="pm-heading pm-about-heading">About this project</h4>
+                  <p className="pm-about">{project.about}</p>
+                </div>
+              </div>
             </div>
           </div>,
           document.body
