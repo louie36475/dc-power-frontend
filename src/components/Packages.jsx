@@ -2,31 +2,31 @@ import './Packages.css';
 
 const PACKAGES = [
   {
-    name: '5kW Hybrid System',
+    name: '6kW Hybrid System',
     specs: '8 × 550W panels · 4.4 kWp · 10 kWh battery',
     blurb: 'Entry-level hybrid for smaller homes.',
     price: '₱320,000',
-    popular: false,
-  },
-  {
-    name: '6kW Hybrid System',
-    specs: '10 × 550W panels · 5.5 kWp · 10 kWh battery',
-    blurb: 'Our most popular size for Filipino homes.',
-    price: '₱365,000',
     popular: true,
   },
   {
     name: '8kW Hybrid System',
-    specs: '14 × 550W panels · 7.7 kWp · 10 kWh battery',
-    blurb: 'For medium homes running air conditioning.',
-    price: '₱452,000',
+    specs: '10 × 550W panels · 5.5 kWp · 10 kWh battery',
+    blurb: 'Our most popular size for Filipino homes.',
+    price: '₱370,000',
     popular: false,
   },
   {
     name: '10kW Hybrid System',
+    specs: '14 × 550W panels · 7.7 kWp · 10 kWh battery',
+    blurb: 'For medium homes running air conditioning.',
+    price: '₱340,000',
+    popular: false,
+  },
+  {
+    name: '12kW Hybrid System',
     specs: '16 × 550W panels · 8.8 kWp · 16 kWh battery',
     blurb: 'Larger households or small businesses.',
-    price: '₱518,000',
+    price: '₱450,000',
     popular: false,
   },
 ];
