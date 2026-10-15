@@ -29,18 +29,24 @@ const DEFAULT_ABOUT =
 // Yung unang photo ang cover sa grid.
 // ---------------------------------------------------------------------------
 const PROJECTS = [
-  { id: 'project-1',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 1',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 1.png'] },
-  { id: 'project-2',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 2',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 2.png'] },
-  { id: 'project-3',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 3',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 3.png'] },
-  { id: 'project-4',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 4',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 4.png'] },
-  { id: 'project-5',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 5',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 5.png'] },
-  { id: 'project-6',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 6',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 6.png'] },
-  { id: 'project-7',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Inverter & Battery Installation 7',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 7.png'] },
-  { id: 'project-8',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 1',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 8.png'] },
-  { id: 'project-9',  badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 2',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 9.png'] },
-  { id: 'project-10', badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 3',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 10.png'] },
-  { id: 'project-11', badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 4',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 11.png'] },
-  { id: 'project-12', badge: 'KW', place: 'Lokasyon, Siyudad', title: 'Rooftop Panels Installation 5',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 12.png'] },
+  { id: 'project-1',  badge: '', place: '', title: '',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 1.png'] },
+  { id: 'project-2',  badge: '', place: '', title: '',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 2.png'] },
+  { id: 'project-3',  badge: '', place: '', title: '',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 3.png'] },
+  { id: 'project-4',  badge: '', place: '', title: '',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 4.png'] },
+  { id: 'project-5',  badge: '', place: '', title: '',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 5.png'] },
+  { id: 'project-6',  badge: '', place: '', title: '',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 6.png'] },
+  { id: 'project-7',  badge: '', place: '', title: '',  specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 7.png'] },
+  { id: 'project-8',  badge: '', place: '', title: '',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 8.png'] },
+  { id: 'project-9',  badge: '', place: '', title: '',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 9.png'] },
+  { id: 'project-10', badge: '', place: '', title: '',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 10.png'] },
+  { id: 'project-11', badge: '', place: '', title: '',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 11.png'] },
+  { id: 'project-12', badge: '', place: '', title: '',      specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 12.png'] },
+  { id: 'project-13', badge: '', place: '', title: '',              specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 13.png'] },
+  { id: 'project-14', badge: '', place: '', title: '',              specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 14.png'] },
+  { id: 'project-15', badge: '', place: '', title: '',              specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 15.png'] },
+  { id: 'project-16', badge: '', place: '', title: '',              specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 16.png'] },
+  { id: 'project-17', badge: '', place: '', title: '',              specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 17.png'] },
+  { id: 'project-18', badge: '', place: '', title: '',              specs: DEFAULT_SPECS, about: DEFAULT_ABOUT, photos: ['image 18.png'] },
 ];
 
 const src = (file) => encodeURI(FOLDER + file);

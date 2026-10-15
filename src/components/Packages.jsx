@@ -39,7 +39,7 @@ const ADDONS = [
     price: 'from ₱95,000',
   },
   {
-    name: 'Additional Solar Panels (per pair)',
+    name: 'Additional Solar Panels ',
     specs: '2 × 550W panels, mounting + cable + labor included',
     blurb: 'Add generation capacity to your setup.',
     price: '₱22,000',

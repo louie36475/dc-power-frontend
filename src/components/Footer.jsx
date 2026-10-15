@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="wrap footer-inner">
         <div className="brand">
           <img src={logo} alt="DC Power logo" className="footer-mark" />
-          DC Power — {year}
+          DC Power — {2012}
         </div>
         <div className="foot-links">
           <Link to="/#services">Services</Link>

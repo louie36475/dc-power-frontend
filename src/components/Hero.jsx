@@ -103,7 +103,7 @@ export default function Hero() {
             <div className="stat-label">homes &amp; businesses powered</div>
           </div>
           <div className="stat-card">
-            <div className="stat-num mono">8 yrs</div>
+            <div className="stat-num mono">13 yrs</div>
             <div className="stat-label">in the field</div>
           </div>
           <div className="stat-card">

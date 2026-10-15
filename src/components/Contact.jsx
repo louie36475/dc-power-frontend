@@ -11,10 +11,21 @@ const ACCESS_KEY = '1d65e651-b3e4-4d3c-a73f-88256621d203';
 const PHONE_DISPLAY = '+63 900 000 0000';
 const PHONE_LINK = '+639000000000'; // digits only, no spaces
 const EMAIL = 'dcpowersolar@gmail.com';
+// Mga pagpipilian sa "kailan i-install". Palitan mo lang kung gusto mo ng iba.
+const TIMELINES = [
+  'As soon as possible',
+  'Within 1 month',
+  'In 1–3 months',
+  'In 3–6 months',
+  'Just exploring',
+];
 // ======================================================
 
+const EMPTY_FORM = { name: '', phone: '', email: '', city: '', message: '' };
+
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', phone: '', city: '', message: '' });
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [timeline, setTimeline] = useState('');
   const [estimate, setEstimate] = useState(null); // filled in by the calculator
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
 
@@ -45,13 +56,15 @@ export default function Contact() {
         body: JSON.stringify({
           ...(ACCESS_KEY ? { access_key: ACCESS_KEY } : {}),
           subject: 'New quote request - DC Power',
-          ...form,
+          ...form, // kasama na dito yung "email" ng customer
+          install_timeline: timeline || 'Not specified',
           ...estimateFields,
         }),
       });
       if (!res.ok) throw new Error('Request failed');
       setStatus('success');
-      setForm({ name: '', phone: '', city: '', message: '' });
+      setForm(EMPTY_FORM);
+      setTimeline('');
     } catch (err) {
       setStatus('error');
     }
@@ -113,9 +126,42 @@ export default function Contact() {
               </div>
             </div>
             <div className="field">
+              <label htmlFor="q-email">Email</label>
+              <input
+                id="q-email"
+                name="email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                placeholder="e.g. juan@email.com"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="field">
               <label htmlFor="q-city">City / municipality</label>
               <input id="q-city" name="city" type="text" value={form.city} onChange={handleChange} required />
             </div>
+
+            <div className="field">
+              <label id="q-timeline-label">When do you want us to install?</label>
+              <div className="quote-chips" role="radiogroup" aria-labelledby="q-timeline-label">
+                {TIMELINES.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    role="radio"
+                    aria-checked={timeline === t}
+                    className={`quote-chip ${timeline === t ? 'active' : ''}`}
+                    onClick={() => setTimeline(timeline === t ? '' : t)}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <div className="field">
               <label htmlFor="q-message">Anything else we should know?</label>
               <textarea id="q-message" name="message" placeholder="Roof type, interested in battery backup..." value={form.message} onChange={handleChange} />
