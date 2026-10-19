@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import gsap from 'gsap';
 import './SizeCalculator.css';
 
 // Rough planning assumptions for the Philippines — good enough for a
@@ -11,7 +12,39 @@ const PANEL_AREA_SQM = 2.3; // roof area per panel incl. spacing
 const BATTERY_USABLE_FRACTION = 0.9; // usable depth-of-discharge, LiFePO4
 const BATTERY_STEP_KWH = 5; // round suggested battery size to this step
 
+const MAX_KWP = 15; // para sa ring gauge
+const MAX_BATTERY = 30; // para sa battery bar
+const MAX_CELLS = 24; // pinakamaraming panel na ipapakita sa grid
+const RING = 2 * Math.PI * 44;
+
+const reduceMotion = () =>
+  typeof window !== 'undefined' &&
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Numero na umaakyat/bumababa nang smooth gamit ang GSAP
+function useTween(target, duration = 0.8) {
+  const [value, setValue] = useState(target);
+  const obj = useRef({ v: target });
+  useEffect(() => {
+    if (reduceMotion()) {
+      obj.current.v = target;
+      setValue(target);
+      return;
+    }
+    const tw = gsap.to(obj.current, {
+      v: target,
+      duration,
+      ease: 'power3.out',
+      onUpdate: () => setValue(obj.current.v),
+    });
+    return () => tw.kill();
+  }, [target, duration]);
+  return value;
+}
+
 export default function SizeCalculator({ onEstimate }) {
+  const outRef = useRef(null);
+  const popped = useRef(false);
   const [mode, setMode] = useState('bill'); // 'bill' | 'kwh'
   const [bill, setBill] = useState('');
   const [kwh, setKwh] = useState('');
@@ -54,6 +87,12 @@ export default function SizeCalculator({ onEstimate }) {
     };
   }
 
+  // Animated na numero
+  const shownKwp = useTween(hasInput ? recommendedKwp : 0);
+  const shownPanels = useTween(hasInput ? numPanels : 0);
+  const shownRoof = useTween(hasInput ? roofArea : 0);
+  const shownBattery = useTween(hasInput ? suggestedBatteryKwh : 0);
+
   // Report the current result up to the quote form so it can be sent along
   // with the customer's request (null when nothing has been entered yet).
   useEffect(() => {
@@ -75,6 +114,31 @@ export default function SizeCalculator({ onEstimate }) {
     });
   }, [mode, billNum, kwhNum, nightPercent, onEstimate]);
 
+  // Maliit na "pop" ng result panel pagkatapos ng unang input
+  useEffect(() => {
+    if (!hasInput || popped.current || reduceMotion()) return;
+    popped.current = true;
+    const el = outRef.current;
+    if (!el) return;
+    gsap.fromTo(
+      el.querySelectorAll('.cc-pop'),
+      { y: 14, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'power3.out' }
+    );
+  }, [hasInput]);
+
+  // Spotlight na sumusunod sa mouse
+  const onMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    e.currentTarget.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    e.currentTarget.style.setProperty('--my', `${e.clientY - r.top}px`);
+  };
+
+  const cells = Math.min(hasInput ? numPanels : 0, MAX_CELLS);
+  const extra = hasInput ? Math.max(0, numPanels - MAX_CELLS) : 0;
+  const ringFill = hasInput ? Math.min(1, recommendedKwp / MAX_KWP) : 0;
+  const batteryFill = hasInput ? Math.min(1, suggestedBatteryKwh / MAX_BATTERY) : 0;
+
   return (
     <div className="calc-card">
       <div className="calc-head">
@@ -83,111 +147,168 @@ export default function SizeCalculator({ onEstimate }) {
         <p>Enter your electric bill (or your usage in kWh, if you know it) and get an instant ballpark.</p>
       </div>
 
-      <div className="calc-mode-toggle" role="tablist" aria-label="Calculator input mode">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === 'bill'}
-          className={`calc-mode-btn ${mode === 'bill' ? 'active' : ''}`}
-          onClick={() => setMode('bill')}
-        >
-          By monthly bill
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === 'kwh'}
-          className={`calc-mode-btn ${mode === 'kwh' ? 'active' : ''}`}
-          onClick={() => setMode('kwh')}
-        >
-          By kWh usage
-        </button>
-      </div>
-
-      {mode === 'bill' ? (
-        <div className="field">
-          <label htmlFor="calc-bill">Average monthly electric bill (₱)</label>
-          <input
-            id="calc-bill"
-            type="text"
-            inputMode="numeric"
-            placeholder="e.g. 8,000"
-            value={bill}
-            onChange={(e) => setBill(e.target.value)}
-          />
-        </div>
-      ) : (
-        <div className="field">
-          <label htmlFor="calc-kwh">Average monthly usage (kWh)</label>
-          <input
-            id="calc-kwh"
-            type="text"
-            inputMode="numeric"
-            placeholder="e.g. 650"
-            value={kwh}
-            onChange={(e) => setKwh(e.target.value)}
-          />
-        </div>
-      )}
-
-      <div className="field calc-slider-field">
-        <label htmlFor="calc-night">
-          How much of your electricity use happens at night (6pm–6am)?
-        </label>
-        <input
-          id="calc-night"
-          type="range"
-          min="0"
-          max="100"
-          step="5"
-          value={nightPercent}
-          onChange={(e) => setNightPercent(Number(e.target.value))}
-          className="calc-slider"
-        />
-        <div className="calc-split-bar">
-          <div className="calc-split-day" style={{ width: `${dayPercent}%` }} />
-          <div className="calc-split-night" style={{ width: `${nightPercent}%` }} />
-        </div>
-        <div className="calc-split-labels">
-          <span><span className="calc-split-dot calc-split-dot--day" />Day — {dayPercent}%</span>
-          <span><span className="calc-split-dot calc-split-dot--night" />Night — {nightPercent}%</span>
-        </div>
-      </div>
-
-      <div className={`calc-result ${hasInput ? 'show' : ''}`}>
-        <div className="calc-result-main">
-          <span className="calc-result-num mono">{hasInput ? recommendedKwp.toFixed(1) : '—'}</span>
-          <span className="calc-result-unit">kWp recommended</span>
-        </div>
-        <div className="calc-result-grid">
-          <div>
-            <span className="calc-result-sub mono">{hasInput ? numPanels : '—'}</span>
-            <span className="calc-result-label">panels (450W each)</span>
+      <div className="calc-body">
+        {/* Kaliwa: inputs */}
+        <div className="calc-inputs">
+          <div className="calc-mode-toggle" role="tablist" aria-label="Calculator input mode">
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === 'bill'}
+              className={`calc-mode-btn ${mode === 'bill' ? 'active' : ''}`}
+              onClick={() => setMode('bill')}
+            >
+              By monthly bill
+            </button>
+            <button
+              type="button"
+              role="tab"
+              aria-selected={mode === 'kwh'}
+              className={`calc-mode-btn ${mode === 'kwh' ? 'active' : ''}`}
+              onClick={() => setMode('kwh')}
+            >
+              By kWh usage
+            </button>
           </div>
-          <div>
-            <span className="calc-result-sub mono">{hasInput ? `${roofArea.toFixed(0)} m²` : '—'}</span>
-            <span className="calc-result-label">roof area needed</span>
-          </div>
-        </div>
 
-        <div className={`calc-battery-box calc-battery-box--${batteryTier.tone}`}>
-          <div className="calc-battery-head">
-            <span>Battery storage</span>
-            <span className="calc-battery-tier">{batteryTier.label}</span>
-          </div>
-          {hasInput && (
-            <div className="calc-battery-size mono">
-              ~{suggestedBatteryKwh} kWh suggested
+          {mode === 'bill' ? (
+            <div className="field">
+              <label htmlFor="calc-bill">Average monthly electric bill (₱)</label>
+              <input
+                id="calc-bill"
+                type="text"
+                inputMode="numeric"
+                placeholder="e.g. 8,000"
+                value={bill}
+                onChange={(e) => setBill(e.target.value)}
+              />
+            </div>
+          ) : (
+            <div className="field">
+              <label htmlFor="calc-kwh">Average monthly usage (kWh)</label>
+              <input
+                id="calc-kwh"
+                type="text"
+                inputMode="numeric"
+                placeholder="e.g. 650"
+                value={kwh}
+                onChange={(e) => setKwh(e.target.value)}
+              />
             </div>
           )}
-          <p className="calc-battery-note">{batteryTier.note}</p>
+
+          <div className="field calc-slider-field">
+            <label htmlFor="calc-night">
+              How much of your electricity use happens at night (6pm–6am)?
+            </label>
+            <input
+              id="calc-night"
+              type="range"
+              min="0"
+              max="100"
+              step="5"
+              value={nightPercent}
+              onChange={(e) => setNightPercent(Number(e.target.value))}
+              className="calc-slider"
+            />
+            <div className="calc-split-bar">
+              <div className="calc-split-day" style={{ width: `${dayPercent}%` }} />
+              <div className="calc-split-night" style={{ width: `${nightPercent}%` }} />
+            </div>
+            <div className="calc-split-labels">
+              <span className="calc-split-item">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4" fill="#f5c518" />
+                  <path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M19.1 4.9L17 7M7 17l-2.1 2.1" stroke="#f5c518" strokeWidth="2" strokeLinecap="round" />
+                </svg>
+                Day — {dayPercent}%
+              </span>
+              <span className="calc-split-item">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" fill="#1f6fd1" />
+                </svg>
+                Night — {nightPercent}%
+              </span>
+            </div>
+          </div>
         </div>
 
-        <p className="calc-note">
-          Rough estimate based on {PEAK_SUN_HOURS} peak sun hours/day and typical system losses — we'll
-          confirm the exact size during a free site visit.
-        </p>
+        {/* Kanan: result panel */}
+        <div className={`calc-out ${hasInput ? 'show' : ''}`} ref={outRef} onMouseMove={onMove}>
+          <div className="cc-spot" aria-hidden="true" />
+
+          <div className="cc-label cc-pop">Recommended system</div>
+
+          <div className="cc-top cc-pop">
+            <div className="cc-ring">
+              <svg viewBox="0 0 100 100" aria-hidden="true">
+                <circle cx="50" cy="50" r="44" className="cc-ring-bg" />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="44"
+                  className="cc-ring-fg"
+                  style={{
+                    strokeDasharray: RING,
+                    strokeDashoffset: RING * (1 - ringFill),
+                  }}
+                />
+              </svg>
+              <div className="cc-ring-text">
+                <strong className="mono">{hasInput ? shownKwp.toFixed(1) : '—'}</strong>
+                <span>kWp</span>
+              </div>
+            </div>
+
+            <div className="cc-mini">
+              <div>
+                <strong className="mono">{hasInput ? Math.round(shownPanels) : '—'}</strong>
+                <span>panels (450W each)</span>
+              </div>
+              <div>
+                <strong className="mono">{hasInput ? `${Math.round(shownRoof)} m²` : '—'}</strong>
+                <span>roof area needed</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Panel grid */}
+          <div className="cc-pop">
+            <div className="cc-panels" aria-hidden="true">
+              {Array.from({ length: cells }).map((_, i) => (
+                <span className="cc-cell" key={i} style={{ '--i': i }} />
+              ))}
+              {extra > 0 && <span className="cc-more mono">+{extra}</span>}
+              {!hasInput &&
+                Array.from({ length: 8 }).map((_, i) => <span className="cc-cell ghost" key={`g${i}`} />)}
+            </div>
+          </div>
+
+          {/* Battery */}
+          <div className={`calc-battery-box calc-battery-box--${batteryTier.tone} cc-pop`}>
+            <div className="calc-battery-head">
+              <span>Battery storage</span>
+              <span className="calc-battery-tier">{batteryTier.label}</span>
+            </div>
+            <div className="cc-battery" aria-hidden="true">
+              <span style={{ width: `${batteryFill * 100}%` }} />
+            </div>
+            {hasInput && (
+              <div className="calc-battery-size mono">
+                ~{Math.round(shownBattery)} kWh suggested
+              </div>
+            )}
+            <p className="calc-battery-note">{batteryTier.note}</p>
+          </div>
+
+          {!hasInput && <p className="cc-hint">Type your bill or usage to see your system appear here.</p>}
+        </div>
       </div>
+
+      <p className="calc-note">
+        Rough estimate based on {PEAK_SUN_HOURS} peak sun hours/day and typical system losses — we'll
+        confirm the exact size during a free site visit.
+      </p>
     </div>
   );
 }

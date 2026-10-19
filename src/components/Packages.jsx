@@ -1,105 +1,318 @@
+import { useEffect, useRef, useState } from 'react';
 import './Packages.css';
 
+const TITLE = 'Package Pricing';
+
+// Placeholder lang ito. 0 = walang interes. Palitan kapag alam mo na ang totoong financing.
+const INTEREST_RATE = 0; // taunang interes, hal. 0.12 = 12%
+const TERMS = [0, 12, 24, 36]; // 0 = cash
+
+const INCLUDES = [
+  'Solar panels',
+  'Hybrid inverter',
+  'Battery storage',
+  'Installation by our crew',
+  'Lifetime after-sales support',
+];
+
+// price = numero lang (walang ₱ o comma)
 const PACKAGES = [
-  {
-    name: '6kW Hybrid System',
-    specs: '8 × 550W panels · 4.4 kWp · 10 kWh battery',
-    blurb: 'Entry-level hybrid for smaller homes.',
-    price: '₱320,000',
-    popular: true,
-  },
-  {
-    name: '8kW Hybrid System',
-    specs: '10 × 550W panels · 5.5 kWp · 10 kWh battery',
-    blurb: 'Our most popular size for Filipino homes.',
-    price: '₱370,000',
-    popular: false,
-  },
-  {
-    name: '10kW Hybrid System',
-    specs: '14 × 550W panels · 7.7 kWp · 10 kWh battery',
-    blurb: 'For medium homes running air conditioning.',
-    price: '₱340,000',
-    popular: false,
-  },
-  {
-    name: '12kW Hybrid System',
-    specs: '16 × 550W panels · 8.8 kWp · 16 kWh battery',
-    blurb: 'Larger households or small businesses.',
-    price: '₱450,000',
-    popular: false,
-  },
+  { id: '6kw',  name: '6kW Hybrid System',  panels: '8 × 550W',  kwp: '4.4 kWp', battery: '10 kWh', blurb: 'Entry-level hybrid for smaller homes.',        price: 320000, popular: true },
+  { id: '8kw',  name: '8kW Hybrid System',  panels: '10 × 550W', kwp: '5.5 kWp', battery: '10 kWh', blurb: 'Our most popular size for Filipino homes.',    price: 370000, popular: false },
+  { id: '10kw', name: '10kW Hybrid System', panels: '14 × 550W', kwp: '7.7 kWp', battery: '10 kWh', blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
+  { id: '12kw', name: '12kW Hybrid System', panels: '16 × 550W', kwp: '8.8 kWp', battery: '16 kWh', blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
 ];
 
 const ADDONS = [
-  {
-    name: 'Extra Battery Module',
-    specs: '5.12kWh LiFePO4',
-    blurb: 'Add storage for heavier nighttime use.',
-    price: 'from ₱95,000',
-  },
-  {
-    name: 'Additional Solar Panels ',
-    specs: '2 × 550W panels, mounting + cable + labor included',
-    blurb: 'Add generation capacity to your setup.',
-    price: '₱22,000',
-  },
+  { id: 'battery', name: 'Extra Battery Module',    specs: '5.12kWh LiFePO4',                                 price: 95000, from: true },
+  { id: 'panels',  name: 'Additional Solar Panels', specs: '2 × 550W, mounting + cable + labor included',     price: 22000, from: false },
 ];
 
+const fmt = (n) => '₱' + Math.round(n).toLocaleString('en-PH');
+
+const monthly = (total, months) => {
+  if (!months) return total;
+  const r = INTEREST_RATE / 12;
+  if (!r) return total / months;
+  return (total * r) / (1 - Math.pow(1 + r, -months));
+};
+
 export default function Packages() {
+  const rootRef = useRef(null);
+  const headRef = useRef(null);
+  const touchX = useRef(null);
+  const [active, setActive] = useState(Math.max(0, PACKAGES.findIndex((p) => p.popular)));
+  const [term, setTerm] = useState(0);
+  const [picked, setPicked] = useState([]);
+  const [shown, setShown] = useState(false);
+  const n = PACKAGES.length;
+
+  const go = (dir) => setActive((i) => (i + dir + n) % n);
+
+  // Title reveal: nagsisimula kapag nakita na ang heading mismo
+  useEffect(() => {
+    const el = headRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2, rootMargin: '0px 0px -10% 0px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const offsetOf = (i) => {
+    let d = (i - active + n) % n;
+    if (d > n / 2) d -= n;
+    return d;
+  };
+
+  const onKeyDown = (e) => {
+    if (e.key === 'ArrowRight') go(1);
+    if (e.key === 'ArrowLeft') go(-1);
+  };
+  const onTouchStart = (e) => { touchX.current = e.touches[0].clientX; };
+  const onTouchEnd = (e) => {
+    if (touchX.current === null) return;
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1);
+    touchX.current = null;
+  };
+
+  const toggleAddon = (id) =>
+    setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+
+  const pkg = PACKAGES[active];
+  const chosen = ADDONS.filter((a) => picked.includes(a.id));
+  const addonTotal = chosen.reduce((s, a) => s + a.price, 0);
+  const total = pkg.price + addonTotal;
+  const hasFrom = chosen.some((a) => a.from);
+
+  const requestPackage = () => {
+    const detail = {
+      package: pkg.name,
+      addons: chosen.map((a) => a.name),
+      total,
+      term: term ? `${term} months` : 'Cash',
+    };
+    try { sessionStorage.setItem('dc-package', JSON.stringify(detail)); } catch (e) { /* okay lang */ }
+    window.dispatchEvent(new CustomEvent('dc:package-selected', { detail }));
+  };
+
   return (
-    <section id="packages">
+    <section id="packages" ref={rootRef}>
+      <svg className="pk-waves" viewBox="0 0 1440 800" preserveAspectRatio="none" aria-hidden="true">
+        <path className="pk-wave w1" d="M-100 180 C 200 80, 420 280, 720 170 S 1240 90, 1560 200" />
+        <path className="pk-wave w2" d="M-100 420 C 180 330, 460 520, 760 410 S 1240 340, 1560 450" />
+        <path className="pk-wave w3" d="M-100 650 C 240 570, 480 730, 800 640 S 1260 560, 1560 670" />
+      </svg>
+
       <div className="wrap">
-        <div className="section-head">
-          <div className="eyebrow">SYSTEM PACKAGES</div>
-          <h2>Package pricing</h2>
-          <p>
-            All-in pricing includes panels, inverter, battery, and installation. Your final quote
-            depends on brand availability, add-ons, and a site assessment — use the calculator
-            above or request a quote for your exact figure.
-          </p>
+        <div className={`pk-head ${shown ? 'in' : ''}`} ref={headRef}>
+          <div>
+            <div className="pk-eyebrow">SYSTEM PACKAGES</div>
+            <h2 className="pk-title" aria-label={TITLE}>
+              {TITLE.split(' ').map((w, i) => (
+                <span key={i}>
+                  <span className="pk-word" aria-hidden="true">
+                    <span style={{ '--i': i }}>{w}</span>
+                  </span>{' '}
+                </span>
+              ))}
+            </h2>
+            <span className="pk-underline" aria-hidden="true" />
+            <p className="pk-sub">
+              All-in pricing includes panels, inverter, battery, and installation. Your final quote
+              depends on brand availability, add-ons, and a site assessment.
+            </p>
+          </div>
+          <a href="#pk-compare" className="pk-more">Compare packages ↓</a>
         </div>
 
-        <div className="package-grid">
-          {PACKAGES.map((pkg) => (
-            <div className={`package-card ${pkg.popular ? 'popular' : ''}`} key={pkg.name}>
-              {pkg.popular && <div className="package-badge">Popular</div>}
-              <h3>{pkg.name}</h3>
-              <p className="package-specs">{pkg.specs}</p>
-              <p className="package-blurb">{pkg.blurb}</p>
-              <div className="package-price">
-                <span className="package-price-label">All-in installed</span>
-                <span className="package-price-num mono">{pkg.price}</span>
+        {/* Coverflow */}
+        <div
+          className="pk-stage"
+          tabIndex={0}
+          onKeyDown={onKeyDown}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+          aria-roledescription="carousel"
+          aria-label="Solar packages"
+        >
+          {PACKAGES.map((p, i) => {
+            const d = offsetOf(i);
+            const abs = Math.abs(d);
+            const isActive = d === 0;
+            return (
+              <div
+                key={p.id}
+                className={`pk-card ${isActive ? 'is-active' : ''} ${p.popular ? 'is-popular' : ''}`}
+                style={{
+                  '--d': d,
+                  '--abs': Math.min(abs, 3),
+                  zIndex: 10 - abs,
+                  opacity: abs > 2 ? 0 : isActive ? 1 : 0.6,
+                  pointerEvents: abs > 2 ? 'none' : 'auto',
+                }}
+                onClick={() => !isActive && setActive(i)}
+                onKeyDown={(e) => {
+                  if (!isActive && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    setActive(i);
+                  }
+                }}
+                role={isActive ? 'group' : 'button'}
+                tabIndex={abs > 2 ? -1 : isActive ? -1 : 0}
+                aria-label={isActive ? p.name : `Show ${p.name}`}
+              >
+                {p.popular && <div className="pk-badge">Popular</div>}
+                <h3>{p.name}</h3>
+                <p className="pk-specs">{p.panels} panels · {p.kwp} · {p.battery} battery</p>
+                <p className="pk-blurb">{p.blurb}</p>
+
+                <ul className="pk-includes">
+                  {INCLUDES.map((x) => (
+                    <li key={x}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      {x}
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="pk-price">
+                  <span className="pk-price-label">All-in installed</span>
+                  <span className="pk-price-num mono">{fmt(p.price)}</span>
+                </div>
               </div>
-              <a href="#contact" className="btn btn-primary package-cta">
-                Request Quote
-              </a>
-            </div>
+            );
+          })}
+        </div>
+
+        <div className="pk-dots" role="tablist" aria-label="Choose package">
+          {PACKAGES.map((p, i) => (
+            <button
+              key={p.id}
+              type="button"
+              role="tab"
+              aria-selected={i === active}
+              aria-label={p.name}
+              className={`pk-dot ${i === active ? 'active' : ''}`}
+              onClick={() => setActive(i)}
+            />
           ))}
         </div>
 
-        <div className="addon-head">
-          <h3>Add-ons &amp; upgrades</h3>
-        </div>
-        <div className="addon-grid">
-          {ADDONS.map((addon) => (
-            <div className="addon-card" key={addon.name}>
-              <div className="addon-info">
-                <h4>{addon.name}</h4>
-                <p className="package-specs">{addon.specs}</p>
-                <p className="package-blurb">{addon.blurb}</p>
-              </div>
-              <div className="addon-price">
-                <span className="package-price-num mono">{addon.price}</span>
-                <a href="#contact" className="btn btn-ghost addon-cta">
-                  Add to Quote
-                </a>
-              </div>
+        {/* Customize: financing + add-ons + total */}
+        <div className="pk-build">
+          <div className="pk-build-col">
+            <h4>Payment option</h4>
+            <div className="pk-chips" role="radiogroup" aria-label="Payment option">
+              {TERMS.map((t) => (
+                <button
+                  key={t}
+                  type="button"
+                  role="radio"
+                  aria-checked={term === t}
+                  className={`pk-chip ${term === t ? 'active' : ''}`}
+                  onClick={() => setTerm(t)}
+                >
+                  {t ? `${t} months` : 'Cash'}
+                </button>
+              ))}
             </div>
-          ))}
+            <p className="pk-fine">
+              Estimate lang ito{INTEREST_RATE ? ` (${Math.round(INTEREST_RATE * 100)}% interes kada taon)` : ' (walang interes)'}.
+              Ang totoong financing ay depende sa provider at sa approval.
+            </p>
+
+            <h4 className="pk-h4-gap">Add-ons</h4>
+            <div className="pk-addons">
+              {ADDONS.map((a) => (
+                <label key={a.id} className={`pk-addon ${picked.includes(a.id) ? 'on' : ''}`}>
+                  <input
+                    type="checkbox"
+                    checked={picked.includes(a.id)}
+                    onChange={() => toggleAddon(a.id)}
+                  />
+                  <span className="pk-addon-box" aria-hidden="true" />
+                  <span className="pk-addon-info">
+                    <strong>{a.name}</strong>
+                    <small>{a.specs}</small>
+                  </span>
+                  <span className="pk-addon-price mono">{a.from ? 'from ' : '+'}{fmt(a.price)}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+
+          <div className="pk-summary">
+            <div className="pk-summary-title">Your setup</div>
+            <div className="pk-summary-name">{pkg.name}</div>
+            {chosen.map((a) => (
+              <div className="pk-summary-line" key={a.id}>+ {a.name}</div>
+            ))}
+
+            <div className="pk-summary-total">
+              <span className="pk-price-label">Estimated total{hasFrom ? ' (from)' : ''}</span>
+              <span className="pk-total-num mono">{fmt(total)}</span>
+            </div>
+
+            {term > 0 && (
+              <div className="pk-monthly">
+                ≈ <strong className="mono">{fmt(monthly(total, term))}</strong> / month for {term} months
+              </div>
+            )}
+
+            <a href="#contact" className="btn btn-primary pk-cta" onClick={requestPackage}>
+              Request this package
+            </a>
+          </div>
         </div>
 
-        <p className="package-note">
+        {/* Compare */}
+        <div className="pk-compare" id="pk-compare">
+          <h4>Compare all packages</h4>
+          <div className="pk-table-wrap">
+            <table className="pk-table">
+              <thead>
+                <tr>
+                  <th>Package</th>
+                  <th>Panels</th>
+                  <th>System size</th>
+                  <th>Battery</th>
+                  <th>All-in price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {PACKAGES.map((p, i) => (
+                  <tr
+                    key={p.id}
+                    className={i === active ? 'on' : ''}
+                    onClick={() => setActive(i)}
+                  >
+                    <td>
+                      {p.name}
+                      {p.popular && <span className="pk-mini">Popular</span>}
+                    </td>
+                    <td>{p.panels}</td>
+                    <td>{p.kwp}</td>
+                    <td>{p.battery}</td>
+                    <td className="mono">{fmt(p.price)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <p className="pk-note">
           All systems include lifetime after-sales support. Prices shown are placeholders — swap
           in your real package lineup and figures before launch.
         </p>

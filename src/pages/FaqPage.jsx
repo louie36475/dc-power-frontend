@@ -1,6 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import PageHeader from '../components/PageHeader';
 import './pages.css';
 import './FaqPage.css';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const FAQS = [
   {
@@ -37,12 +42,13 @@ const FAQS = [
   },
 ];
 
-function FaqItem({ q, a, isOpen, onToggle }) {
+function FaqItem({ q, a, num, isOpen, onToggle }) {
   return (
     <div className={`faq-item ${isOpen ? 'open' : ''}`}>
       <button type="button" className="faq-question" onClick={onToggle} aria-expanded={isOpen}>
-        {q}
-        <span className="faq-icon" aria-hidden="true">{isOpen ? '\u2212' : '+'}</span>
+        <span className="faq-num mono" aria-hidden="true">{num}</span>
+        <span className="faq-q">{q}</span>
+        <span className="faq-icon" aria-hidden="true">+</span>
       </button>
       <div className="faq-answer">
         <p>{a}</p>
@@ -52,29 +58,118 @@ function FaqItem({ q, a, isOpen, onToggle }) {
 }
 
 export default function FaqPage() {
+  const rootRef = useRef(null);
   const [openIndex, setOpenIndex] = useState(0);
+  const [query, setQuery] = useState('');
+
+  const list = useMemo(() => {
+    const s = query.trim().toLowerCase();
+    return FAQS.map((f, i) => ({ ...f, id: i })).filter(
+      (f) => !s || f.q.toLowerCase().includes(s) || f.a.toLowerCase().includes(s)
+    );
+  }, [query]);
+
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        '.faq-search',
+        { y: 18, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: '.faq-search', start: 'top 92%', once: true },
+        }
+      );
+      gsap.fromTo(
+        '.faq-item',
+        { y: 22, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.6,
+          stagger: 0.08,
+          ease: 'power2.out',
+          scrollTrigger: { trigger: '.faq-list', start: 'top 90%', once: true },
+        }
+      );
+      gsap.fromTo(
+        '.faq-cta',
+        { y: 20, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.7,
+          ease: 'power3.out',
+          scrollTrigger: { trigger: '.faq-cta', start: 'top 95%', once: true },
+        }
+      );
+    }, rootRef);
+
+    const refresh = () => ScrollTrigger.refresh();
+    window.addEventListener('load', refresh);
+    const timer = setTimeout(refresh, 300);
+
+    return () => {
+      window.removeEventListener('load', refresh);
+      clearTimeout(timer);
+      ctx.revert();
+    };
+  }, []);
 
   return (
     <>
-      <div className="page-header">
-        <div className="wrap">
-          <div className="eyebrow">FAQ</div>
-          <h1>Frequently asked questions</h1>
-          <p>Answers to common questions about solar systems and financing.</p>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="FAQ"
+        title="Frequently asked questions"
+        text="Answers to common questions about solar systems and financing."
+      />
 
-      <section className="faq-section">
+      <section className="faq-section" ref={rootRef}>
         <div className="wrap faq-wrap">
-          {FAQS.map((item, i) => (
-            <FaqItem
-              key={item.q}
-              q={item.q}
-              a={item.a}
-              isOpen={openIndex === i}
-              onToggle={() => setOpenIndex(openIndex === i ? -1 : i)}
+          <div className="faq-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
+              <path d="M20 20l-3.5-3.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+            <input
+              type="search"
+              placeholder="Search a question..."
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setOpenIndex(-1);
+              }}
+              aria-label="Search questions"
             />
-          ))}
+          </div>
+
+          <div className="faq-list">
+            {list.map((item, i) => (
+              <FaqItem
+                key={item.q}
+                q={item.q}
+                a={item.a}
+                num={String(item.id + 1).padStart(2, '0')}
+                isOpen={openIndex === item.id}
+                onToggle={() => setOpenIndex(openIndex === item.id ? -1 : item.id)}
+              />
+            ))}
+            {list.length === 0 && (
+              <p className="faq-empty">No questions match "{query}". Try another word.</p>
+            )}
+          </div>
+
+          <div className="faq-cta">
+            <div>
+              <h3>Still have a question?</h3>
+              <p>Send us a message and we'll get back to you, usually within one business day.</p>
+            </div>
+            <a href="/#contact" className="btn btn-primary">Contact us</a>
+          </div>
         </div>
       </section>
     </>

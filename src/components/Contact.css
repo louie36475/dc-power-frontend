@@ -1,24 +1,67 @@
-#contact { padding: 110px 0; }
+#contact {
+  position: relative;
+  overflow: hidden;
+  padding: 110px 0;
+  background: #ffffff;
+  border-top: 1px solid #eadcd6;
+}
+#contact .wrap {
+  position: relative;
+  z-index: 2;
+}
+
+/* Napakahinang gold na ilaw sa likod (gumagalaw sa scroll) */
+.ct-glow {
+  position: absolute;
+  top: 18%;
+  right: -160px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 180, 72, 0.16), transparent 68%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Heading */
+.ct-head {
+  text-align: center;
+}
+.ct-line {
+  display: block;
+  width: 90px;
+  height: 4px;
+  margin: 16px auto 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--gold), #f2b448);
+  transform-origin: center;
+}
 
 /* --------------------------------------------------------------------------
    Quote form card
    -------------------------------------------------------------------------- */
 .quote-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: #f6efec;
+  border: 1px solid #e3d3cc;
   border-radius: 16px;
   padding: 40px 44px;
   max-width: 620px;
   margin: 24px auto 0;
+  box-shadow: 0 16px 40px rgba(43, 18, 24, 0.08);
+  transition: box-shadow 0.3s var(--ease);
+}
+.quote-card:hover {
+  box-shadow: 0 22px 50px rgba(43, 18, 24, 0.12);
 }
 
 .quote-card .calc-head h3 {
   font-size: 1.35rem;
   font-weight: 700;
   margin-top: 2px;
+  color: #2b1218;
 }
 .quote-card .calc-head p {
-  color: var(--text-muted);
+  color: #4a3a36;
   font-size: 0.94rem;
   margin-top: 10px;
   max-width: 56ch;
@@ -33,21 +76,24 @@
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
+.quote-card .field-row .field {
+  margin-top: 20px;
+}
 .quote-card .field label {
   display: block;
   font-size: 0.83rem;
-  color: var(--text-muted);
+  color: #4a3a36;
   margin-bottom: 8px;
   font-weight: 500;
 }
 .quote-card .field input,
 .quote-card .field textarea {
   width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  border: 1px solid #e3d3cc;
   border-radius: 8px;
   padding: 12px 14px;
-  color: var(--text);
+  color: #2b1218;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.95rem;
   transition: border-color 0.2s var(--ease);
@@ -65,6 +111,11 @@
 .quote-submit {
   width: 100%;
   margin-top: 24px;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.quote-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(224, 141, 28, 0.35);
 }
 
 .form-success,
@@ -85,67 +136,19 @@
   color: #dc2626;
 }
 
-/* --------------------------------------------------------------------------
-   Plain contact info (no form)
-   -------------------------------------------------------------------------- */
-.contact-info {
-  display: flex;
-  justify-content: center;
-  gap: 40px;
-  margin-top: 40px;
-  flex-wrap: wrap;
-}
-.contact-info-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text);
-  transition: color 0.2s var(--ease);
-}
-.contact-info-item:hover {
-  color: var(--gold);
-}
-.contact-info-item svg {
-  width: 20px;
-  height: 20px;
-  color: var(--gold);
-  flex-shrink: 0;
-}
-
-@media (max-width: 640px) {
-  .quote-card {
-    padding: 28px 22px;
-  }
-  .quote-card .field-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 560px) {
-  .contact-info {
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-}
-
-/* --------------------------------------------------------------------------
-   Calculator estimate shown inside the quote form
-   -------------------------------------------------------------------------- */
+/* Estimate na nasa loob ng quote form */
 .quote-estimate {
   margin-top: 22px;
   padding: 16px 18px;
   border-radius: 12px;
-  border: 1px solid var(--border);
+  border: 1px solid #eadcd6;
   border-left: 3px solid var(--gold);
-  background: var(--bg);
+  background: #ffffff;
 }
 .quote-estimate-title {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--text-muted);
+  color: #4a3a36;
 }
 .quote-estimate-grid {
   display: flex;
@@ -160,30 +163,31 @@
 }
 .quote-estimate-num {
   font-size: 1.05rem;
-  color: var(--text);
+  color: #2b1218;
 }
 .quote-estimate-label {
   font-size: 0.76rem;
-  color: var(--text-muted);
+  color: #4a3a36;
 }
 .quote-estimate-hint {
   margin-top: 18px;
   font-size: 0.84rem;
-  color: var(--text-muted);
+  color: #4a3a36;
 }
 
-/* --------------------------------------------------------------------------
-   Install timeline chips
-   -------------------------------------------------------------------------- */
+/* Chips (ocular visit at install timeline) */
 .quote-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
+.quote-chips--time {
+  margin-top: 10px;
+}
 .quote-chip {
-  border: 1px solid var(--border-strong);
-  background: var(--bg);
-  color: var(--text-muted);
+  border: 1px solid #e3d3cc;
+  background: #ffffff;
+  color: #4a3a36;
   font-family: inherit;
   font-size: 0.85rem;
   font-weight: 600;
@@ -194,7 +198,7 @@
 }
 .quote-chip:hover {
   border-color: var(--gold);
-  color: var(--text);
+  color: #2b1218;
 }
 .quote-chip.active {
   background: var(--gold);
@@ -205,32 +209,46 @@
   outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
-/* Light warm background para sa Contact, sunod sa dark teal ng Packages */
-#contact {
-  background: #f6efec;
+
+/* --------------------------------------------------------------------------
+   Phone at email
+   -------------------------------------------------------------------------- */
+.contact-info {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 40px;
+  flex-wrap: wrap;
 }
-#contact .section-head h2 {
+.contact-info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+  font-weight: 500;
   color: #2b1218;
+  transition: color 0.2s var(--ease);
+}
+.contact-info-item:hover {
+  color: var(--gold);
+}
+.contact-info-item svg {
+  width: 20px;
+  height: 20px;
+  color: var(--gold);
+  flex-shrink: 0;
 }
 
-.quote-card {
-  background: #ffffff;
-  border: 1px solid #eadcd6;
-  box-shadow: 0 14px 36px rgba(43, 18, 24, 0.08);
+@media (max-width: 640px) {
+  #contact { padding: 80px 0; }
+  .quote-card { padding: 28px 22px; }
+  .quote-card .field-row { grid-template-columns: 1fr; }
+  .ct-glow { width: 320px; height: 320px; right: -120px; }
 }
-.quote-card .field input,
-.quote-card .field textarea {
-  background: #faf5f2;
-  border-color: #e3d3cc;
-}
-.quote-estimate {
-  background: #faf5f2;
-  border-color: #eadcd6;
-}
-.quote-chip {
-  background: #faf5f2;
-  border-color: #e3d3cc;
-}
-.quote-chips--time {
-  margin-top: 10px;
+@media (max-width: 560px) {
+  .contact-info {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
 }

@@ -1,9 +1,5 @@
-import { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useEffect, useRef, useState } from 'react';
 import './Services.css';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const iconProps = {
   width: 22,
@@ -11,7 +7,7 @@ const iconProps = {
   viewBox: '0 0 24 24',
   fill: 'none',
   stroke: 'currentColor',
-  strokeWidth: 1.7,
+  strokeWidth: 1.8,
   strokeLinecap: 'round',
   strokeLinejoin: 'round',
   'aria-hidden': true,
@@ -26,7 +22,6 @@ function CalcIcon() {
     </svg>
   );
 }
-
 function SendIcon() {
   return (
     <svg {...iconProps}>
@@ -35,7 +30,6 @@ function SendIcon() {
     </svg>
   );
 }
-
 function PhoneIcon() {
   return (
     <svg {...iconProps}>
@@ -43,7 +37,6 @@ function PhoneIcon() {
     </svg>
   );
 }
-
 function BoltIcon() {
   return (
     <svg {...iconProps}>
@@ -52,94 +45,135 @@ function BoltIcon() {
   );
 }
 
-// Edit the text here if you want to change the wording.
+// Palitan mo lang ang text dito kung gusto mong baguhin.
 const STEPS = [
   {
     num: '01',
+    tag: 'Instant result',
     title: 'Find your system size',
     desc: 'Enter your monthly bill or kWh usage in our calculator. You instantly see the recommended kWp, the number of panels, and whether you need a battery.',
     icon: <CalcIcon />,
   },
   {
     num: '02',
+    tag: 'Short form',
     title: 'Send us your details',
     desc: 'Fill out the short form with your name, contact info, email, and when you want to install. Your calculator estimate is sent along with your request.',
     icon: <SendIcon />,
   },
   {
     num: '03',
+    tag: 'Usually within 1 business day',
     title: 'We reach out to you',
-    desc: 'Our team reviews your request and gets in touch, usually within one business day, to set up a free site visit.',
+    desc: 'Our team reviews your request and gets in touch to set up a free site visit.',
     icon: <PhoneIcon />,
   },
   {
     num: '04',
+    tag: 'Typically 1–3 days',
     title: 'Install and switch on',
-    desc: 'Our own licensed crew does the installation, typically in 1–3 days. Then you start seeing the drop in your electric bill.',
+    desc: 'Our own licensed crew does the installation. Then you start seeing the drop in your electric bill.',
     icon: <BoltIcon />,
   },
 ];
 
 export default function Services() {
-  const rootRef = useRef(null);
+  const listRef = useRef(null);
+  const itemRefs = useRef([]);
+  const [progress, setProgress] = useState(0);
+  const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        '.step-card',
-        { y: 24, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: rootRef.current, start: 'top 80%', once: true },
-        }
-      );
-    }, rootRef);
+    let ticking = false;
 
-    const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener('load', refresh);
-    const timer = setTimeout(refresh, 300);
+    const update = () => {
+      ticking = false;
+      const list = listRef.current;
+      if (!list) return;
+      const mid = window.innerHeight * 0.55;
+      const r = list.getBoundingClientRect();
+      setProgress(Math.min(1, Math.max(0, (mid - r.top) / r.height)));
 
+      let current = 0;
+      itemRefs.current.forEach((el, i) => {
+        if (el && el.getBoundingClientRect().top <= mid) current = i;
+      });
+      setActive(current);
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
     return () => {
-      window.removeEventListener('load', refresh);
-      clearTimeout(timer);
-      ctx.revert();
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
     };
   }, []);
 
   return (
-    <section id="services" ref={rootRef}>
-      <div className="wrap">
-        <div className="section-head">
-          <div className="eyebrow">OUR PROCESS</div>
-          <h2>Four steps from bill to solar</h2>
-          <p>
-            Start with the calculator and see your numbers right away. We only reach out
-            when you're ready.
-          </p>
-        </div>
-
-        <div className="steps-grid">
-          {STEPS.map((s) => (
-            <div className="step-card" key={s.num}>
-              <div className="step-top">
-                <span className="step-icon">{s.icon}</span>
-                <span className="step-num mono">{s.num}</span>
-              </div>
-              <h3>{s.title}</h3>
-              <p>{s.desc}</p>
+    <section id="services">
+      <div className="wrap sv-layout">
+        {/* Kaliwa: sticky panel */}
+        <aside className="sv-side">
+          <div className="sv-panel">
+            <div className="sv-eyebrow">
+              <span className="sv-pulse" /> OUR PROCESS
             </div>
-          ))}
-        </div>
+            <h2>Four steps from bill to solar</h2>
+            <p>
+              Start with the calculator and see your numbers right away. We only reach out when
+              you're ready.
+            </p>
 
-        <div className="steps-cta">
-          <a href="#contact" className="btn btn-primary">
-            Try the Calculator
-          </a>
-        </div>
+            <div className="sv-counter" aria-hidden="true">
+              <span className="mono sv-counter-now">0{active + 1}</span>
+              <span className="mono sv-counter-all">/ 0{STEPS.length}</span>
+            </div>
+
+            <a href="#contact" className="btn btn-primary sv-btn">
+              Try the Calculator
+            </a>
+          </div>
+        </aside>
+
+        {/* Kanan: timeline */}
+        <ol className="sv-list" ref={listRef}>
+          <div className="sv-line" aria-hidden="true">
+            <div className="sv-line-fill" style={{ height: `${progress * 100}%` }} />
+          </div>
+
+          {STEPS.map((s, i) => (
+            <li
+              key={s.num}
+              ref={(el) => (itemRefs.current[i] = el)}
+              className={`sv-item ${i === active ? 'active' : ''} ${i < active ? 'done' : ''}`}
+            >
+              <span className="sv-node" aria-hidden="true">
+                {i < active ? (
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                ) : (
+                  s.icon
+                )}
+              </span>
+
+              <div className="sv-card">
+                <span className="sv-bignum mono" aria-hidden="true">{s.num}</span>
+                <span className="sv-tag">{s.tag}</span>
+                <h3>{s.title}</h3>
+                <p>{s.desc}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
