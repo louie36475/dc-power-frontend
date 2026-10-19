@@ -89,3 +89,31 @@
   .team-item{flex-wrap:wrap;}
   .team-city{margin-left:44px;text-align:left;width:100%;}
 }
+/* Background ng About: kapareho ng Contact at footer (cream) */
+#about {
+  background: #f6efec;
+  border-top: 1px solid #eadcd6;
+  border-bottom: 1px solid #eadcd6;
+}
+#about h2 {
+  color: #2b1218;
+}
+.about-copy p {
+  color: #4a3a36;
+}
+.fact-list {
+  border-top-color: #d8c5bd;
+}
+.fact-row {
+  border-bottom-color: #d8c5bd;
+}
+.fact-row .fact-label {
+  color: #4a3a36;
+}
+.team-item {
+  background: #ffffff;
+  border-color: #eadcd6;
+}
+.fact-group .fact-row {
+  border-bottom-color: #d8c5bd;
+}

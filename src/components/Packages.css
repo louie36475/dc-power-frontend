@@ -1,8 +1,22 @@
 #packages {
   padding: 100px 0;
-  background: var(--surface-2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  background: #0b2c33;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* heading ng section */
+#packages .section-head {
+  text-align: center;
+}
+#packages .section-head h2 {
+  color: #ffffff;
+}
+#packages .section-head p {
+  color: rgba(255, 255, 255, 0.74);
+}
+#packages .section-head .eyebrow {
+  color: #f2b448;
 }
 
 .package-grid {
@@ -13,21 +27,22 @@
 
 .package-card {
   position: relative;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: #12404a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
   padding: 28px 24px;
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease), border-color 0.2s var(--ease), background 0.2s var(--ease);
 }
 .package-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 32px rgba(16, 24, 38, 0.08);
+  background: #17505c;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
 }
 .package-card.popular {
   border-color: var(--gold);
-  box-shadow: 0 8px 28px rgba(224, 141, 28, 0.16);
+  box-shadow: 0 8px 28px rgba(224, 141, 28, 0.25);
 }
 
 .package-badge {
@@ -48,16 +63,17 @@
   font-size: 1.1rem;
   font-weight: 700;
   margin-top: 4px;
+  color: #ffffff;
 }
 .package-specs {
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.65);
   margin-top: 10px;
   line-height: 1.5;
 }
 .package-blurb {
   font-size: 0.88rem;
-  color: var(--text);
+  color: rgba(255, 255, 255, 0.88);
   margin-top: 10px;
   flex-grow: 1;
 }
@@ -67,16 +83,16 @@
   flex-direction: column;
   margin-top: 20px;
   padding-top: 16px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
 .package-price-label {
   font-size: 0.74rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.65);
 }
 .package-price-num {
   font-size: 1.4rem;
   font-weight: 500;
-  color: var(--text);
+  color: #ffffff;
   margin-top: 2px;
 }
 
@@ -94,6 +110,7 @@
 .addon-head h3 {
   font-size: 1.2rem;
   font-weight: 700;
+  color: #ffffff;
 }
 
 .addon-grid {
@@ -104,8 +121,8 @@
 }
 
 .addon-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: #12404a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
   padding: 24px;
   display: flex;
@@ -117,6 +134,7 @@
 .addon-info h4 {
   font-size: 1rem;
   font-weight: 700;
+  color: #ffffff;
 }
 .addon-price {
   display: flex;
@@ -127,13 +145,19 @@
 }
 .addon-cta {
   white-space: nowrap;
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.addon-cta:hover {
+  border-color: var(--gold);
+  color: var(--gold);
 }
 
 .package-note {
   text-align: center;
   margin-top: 40px;
   font-size: 0.82rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.65);
 }
 
 /* --------------------------------------------------------------------------
@@ -145,6 +169,9 @@
   }
 }
 @media (max-width: 640px) {
+  #packages {
+    padding: 70px 0;
+  }
   .package-grid {
     grid-template-columns: 1fr;
   }

@@ -52,7 +52,7 @@ export default function Navbar() {
 
         <div className={`nav-links ${open ? 'open' : ''}`}>
           <div className="nav-center">
-            <Link to="/#services" onClick={closeAll}>Services</Link>
+            <Link to="/#services" onClick={closeAll}>What to Do</Link>
             <Link to="/#packages" onClick={closeAll}>Packages</Link>
 
             <div

@@ -205,3 +205,32 @@
   outline: 2px solid var(--gold);
   outline-offset: 2px;
 }
+/* Light warm background para sa Contact, sunod sa dark teal ng Packages */
+#contact {
+  background: #f6efec;
+}
+#contact .section-head h2 {
+  color: #2b1218;
+}
+
+.quote-card {
+  background: #ffffff;
+  border: 1px solid #eadcd6;
+  box-shadow: 0 14px 36px rgba(43, 18, 24, 0.08);
+}
+.quote-card .field input,
+.quote-card .field textarea {
+  background: #faf5f2;
+  border-color: #e3d3cc;
+}
+.quote-estimate {
+  background: #faf5f2;
+  border-color: #eadcd6;
+}
+.quote-chip {
+  background: #faf5f2;
+  border-color: #e3d3cc;
+}
+.quote-chips--time {
+  margin-top: 10px;
+}

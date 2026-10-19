@@ -19,12 +19,24 @@ const TIMELINES = [
   'In 3–6 months',
   'Just exploring',
 ];
+// Mga pagpipilian sa oras ng ocular visit
+const VISIT_TIMES = ['Morning', 'Afternoon', 'Anytime'];
 // ======================================================
 
 const EMPTY_FORM = { name: '', phone: '', email: '', city: '', message: '' };
 
+// Petsa ngayon (local) para hindi makapili ng nakaraang araw
+const todayStr = () => {
+  const d = new Date();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${d.getFullYear()}-${m}-${day}`;
+};
+
 export default function Contact() {
   const [form, setForm] = useState(EMPTY_FORM);
+  const [visitDate, setVisitDate] = useState('');
+  const [visitTime, setVisitTime] = useState('');
   const [timeline, setTimeline] = useState('');
   const [estimate, setEstimate] = useState(null); // filled in by the calculator
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
@@ -57,6 +69,8 @@ export default function Contact() {
           ...(ACCESS_KEY ? { access_key: ACCESS_KEY } : {}),
           subject: 'New quote request - DC Power',
           ...form, // kasama na dito yung "email" ng customer
+          ocular_visit_date: visitDate || 'Not specified',
+          ocular_visit_time: visitTime || 'Not specified',
           install_timeline: timeline || 'Not specified',
           ...estimateFields,
         }),
@@ -64,6 +78,8 @@ export default function Contact() {
       if (!res.ok) throw new Error('Request failed');
       setStatus('success');
       setForm(EMPTY_FORM);
+      setVisitDate('');
+      setVisitTime('');
       setTimeline('');
     } catch (err) {
       setStatus('error');
@@ -142,6 +158,36 @@ export default function Contact() {
             <div className="field">
               <label htmlFor="q-city">City / municipality</label>
               <input id="q-city" name="city" type="text" value={form.city} onChange={handleChange} required />
+            </div>
+
+            {/* Ocular visit */}
+            <div className="field">
+              <label htmlFor="q-visit-date">When can we do the ocular visit?</label>
+              <input
+                id="q-visit-date"
+                type="date"
+                min={todayStr()}
+                value={visitDate}
+                onChange={(e) => setVisitDate(e.target.value)}
+              />
+              <div
+                className="quote-chips quote-chips--time"
+                role="radiogroup"
+                aria-label="Preferred time of ocular visit"
+              >
+                {VISIT_TIMES.map((t) => (
+                  <button
+                    key={t}
+                    type="button"
+                    role="radio"
+                    aria-checked={visitTime === t}
+                    className={`quote-chip ${visitTime === t ? 'active' : ''}`}
+                    onClick={() => setVisitTime(visitTime === t ? '' : t)}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="field">

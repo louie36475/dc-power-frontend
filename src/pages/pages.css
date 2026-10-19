@@ -1,7 +1,7 @@
 .page-header {
   padding: 160px 0 60px;
-  background: var(--surface-2);
-  border-bottom: 1px solid var(--border);
+  background: #f6efec;
+  border-bottom: 1px solid #eadcd6;
   text-align: center;
 }
 .page-header .eyebrow {
@@ -10,10 +10,11 @@
 .page-header h1 {
   font-size: clamp(2rem, 4vw, 2.8rem);
   font-weight: 700;
+  color: #2b1218;
 }
 .page-header p {
   margin-top: 14px;
-  color: var(--text-muted);
+  color: #4a3a36;
   font-size: 1.05rem;
   max-width: 60ch;
   margin-left: auto;

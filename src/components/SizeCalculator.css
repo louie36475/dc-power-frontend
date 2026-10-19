@@ -1,19 +1,21 @@
 .calc-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: #fbf6f3;
+  border: 1px solid #eadcd6;
   border-radius: 16px;
   padding: 40px 44px;
   max-width: 620px;
   margin: 0 auto;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
 }
 
 .calc-head h3 {
   font-size: 1.35rem;
   font-weight: 700;
   margin-top: 2px;
+  color: #2b1218;
 }
 .calc-head p {
-  color: var(--text-muted);
+  color: #7a6a66;
   font-size: 0.94rem;
   margin-top: 10px;
   max-width: 56ch;
@@ -24,13 +26,13 @@
   margin-top: 24px;
   padding: 4px;
   border-radius: 9px;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: #f1e6e1;
+  border: 1px solid #e3d3cc;
 }
 .calc-mode-btn {
   border: none;
   background: transparent;
-  color: var(--text-muted);
+  color: #7a6a66;
   font-size: 0.86rem;
   font-weight: 600;
   padding: 8px 16px;
@@ -50,17 +52,17 @@
 .calc-card .field label {
   display: block;
   font-size: 0.83rem;
-  color: var(--text-muted);
+  color: #7a6a66;
   margin-bottom: 8px;
   font-weight: 500;
 }
 .calc-card .field input[type='text'] {
   width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border-strong);
+  background: #ffffff;
+  border: 1px solid #e3d3cc;
   border-radius: 8px;
   padding: 12px 14px;
-  color: var(--text);
+  color: #2b1218;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 0.95rem;
   transition: border-color 0.2s var(--ease);
@@ -70,14 +72,11 @@
   outline: none;
 }
 
-/* --------------------------------------------------------------------------
-   Day / night usage slider
-   -------------------------------------------------------------------------- */
+/* Day / night slider */
 .calc-slider-field {
   padding-top: 20px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid #eadcd6;
 }
-
 .calc-slider {
   width: 100%;
   margin-top: 14px;
@@ -85,7 +84,7 @@
   appearance: none;
   height: 4px;
   border-radius: 4px;
-  background: var(--border-strong);
+  background: #e3d3cc;
   outline: none;
 }
 .calc-slider::-webkit-slider-thumb {
@@ -95,8 +94,8 @@
   height: 18px;
   border-radius: 50%;
   background: var(--gold);
-  border: 2px solid var(--surface);
-  box-shadow: 0 0 0 1px var(--border-strong);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px #d8c5bd;
   cursor: pointer;
 }
 .calc-slider::-moz-range-thumb {
@@ -104,7 +103,7 @@
   height: 18px;
   border-radius: 50%;
   background: var(--gold);
-  border: 2px solid var(--surface);
+  border: 2px solid #fff;
   cursor: pointer;
 }
 
@@ -116,20 +115,19 @@
   margin-top: 14px;
 }
 .calc-split-day {
-  background: var(--gold);
+  background: #f5c518;
   transition: width 0.2s var(--ease);
 }
 .calc-split-night {
-  background: var(--blue);
+  background: #1f6fd1;
   transition: width 0.2s var(--ease);
 }
-
 .calc-split-labels {
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #7a6a66;
 }
 .calc-split-dot {
   display: inline-block;
@@ -138,26 +136,18 @@
   border-radius: 50%;
   margin-right: 6px;
 }
-.calc-split-dot--day {
-  background: var(--gold);
-}
-.calc-split-dot--night {
-  background: var(--blue);
-}
+.calc-split-dot--day { background: var(--gold); }
+.calc-split-dot--night { background: #5a1f2e; }
 
-/* --------------------------------------------------------------------------
-   Result
-   -------------------------------------------------------------------------- */
+/* Result */
 .calc-result {
   margin-top: 24px;
   padding-top: 24px;
-  border-top: 1px solid var(--border);
-  opacity: 0.4;
+  border-top: 1px solid #eadcd6;
+  opacity: 0.45;
   transition: opacity 0.25s var(--ease);
 }
-.calc-result.show {
-  opacity: 1;
-}
+.calc-result.show { opacity: 1; }
 
 .calc-result-main {
   display: flex;
@@ -172,9 +162,8 @@
 }
 .calc-result-unit {
   font-size: 0.95rem;
-  color: var(--text-muted);
+  color: #7a6a66;
 }
-
 .calc-result-grid {
   display: flex;
   gap: 32px;
@@ -188,32 +177,24 @@
 }
 .calc-result-sub {
   font-size: 1.15rem;
-  color: var(--text);
+  color: #2b1218;
 }
 .calc-result-label {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #7a6a66;
 }
 
-/* --------------------------------------------------------------------------
-   Battery recommendation box
-   -------------------------------------------------------------------------- */
+/* Battery box */
 .calc-battery-box {
   margin-top: 22px;
   padding: 18px 20px;
   border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--bg);
+  border: 1px solid #eadcd6;
+  background: #ffffff;
 }
-.calc-battery-box--low {
-  border-left: 3px solid var(--text-muted);
-}
-.calc-battery-box--mid {
-  border-left: 3px solid var(--gold);
-}
-.calc-battery-box--high {
-  border-left: 3px solid var(--blue);
-}
+.calc-battery-box--low { border-left: 3px solid #b9a8a2; }
+.calc-battery-box--mid { border-left: 3px solid var(--gold); }
+.calc-battery-box--high { border-left: 3px solid #5a1f2e; }
 
 .calc-battery-head {
   display: flex;
@@ -221,7 +202,7 @@
   align-items: center;
   font-size: 0.92rem;
   font-weight: 700;
-  color: var(--text);
+  color: #2b1218;
 }
 .calc-battery-tier {
   font-size: 0.74rem;
@@ -232,35 +213,32 @@
   border-radius: 100px;
 }
 .calc-battery-box--low .calc-battery-tier {
-  background: var(--border);
-  color: var(--text-muted);
+  background: #f1e6e1;
+  color: #7a6a66;
 }
 .calc-battery-box--mid .calc-battery-tier {
   background: var(--gold-soft);
   color: var(--gold);
 }
 .calc-battery-box--high .calc-battery-tier {
-  background: rgba(31, 116, 199, 0.12);
-  color: var(--blue);
+  background: rgba(90, 31, 46, 0.12);
+  color: #5a1f2e;
 }
-
 .calc-battery-size {
   font-size: 1.1rem;
-  color: var(--text);
+  color: #2b1218;
   margin-top: 8px;
 }
-
 .calc-battery-note {
   font-size: 0.84rem;
-  color: var(--text-muted);
+  color: #7a6a66;
   margin-top: 8px;
   line-height: 1.5;
 }
-
 .calc-note {
   margin-top: 18px;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: #7a6a66;
   line-height: 1.5;
 }
 

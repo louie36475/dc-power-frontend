@@ -60,3 +60,18 @@
 .faq-item.open .faq-answer p {
   padding-bottom: 22px;
 }
+.faq-section {
+  background: #f6efec;
+}
+.faq-item {
+  border-bottom-color: #d8c5bd;
+}
+.faq-question {
+  color: #2b1218;
+}
+.faq-icon {
+  background: #ffffff;
+}
+.faq-answer p {
+  color: #4a3a36;
+}
