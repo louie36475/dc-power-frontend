@@ -136,8 +136,9 @@ export default function Contact() {
     }, rootRef);
 
     const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener('load', refresh);
-    const timer = setTimeout(refresh, 400);
+window.addEventListener('load', refresh);
+const timer = setTimeout(refresh, 400);
+const timer2 = setTimeout(refresh, 1500);
 
     return () => {
       window.removeEventListener('load', refresh);
