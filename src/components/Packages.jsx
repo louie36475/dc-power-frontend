@@ -18,14 +18,14 @@ const INCLUDES = {
     'Hybrid inverter',
     'Battery storage',
     'Installation by our crew',
-    'Lifetime after-sales support',
+    'After-sales support',
   ],
   grid: [
     'Solar panels',
     'Grid-tie inverter',
     'Net metering assistance',
     'Installation by our crew',
-    'Lifetime after-sales support',
+    'After-sales support',
   ],
 };
 
@@ -37,10 +37,10 @@ const PACKAGES = [
   { id: '10kw', type: 'hybrid', name: '10kW Hybrid System', panels: '14 × 600W', kwp: '8.4 kWp', battery: 10, blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
   { id: '12kw', type: 'hybrid', name: '12kW Hybrid System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 16, blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
   // Grid-tie (placeholder: parehong presyo ng hybrid)
-  { id: 'g6',   type: 'grid',   name: '6kW Grid-Tie System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 0, blurb: 'Lower your bill with solar, no battery.',      price: 320000, popular: false },
-  { id: 'g8',   type: 'grid',   name: '8kW Grid-Tie System',  panels: '10 × 600W', kwp: '6 kWp', battery: 0, blurb: 'A popular size for homes with daytime use.',   price: 370000, popular: true },
-  { id: 'g10',  type: 'grid',   name: '10kW Grid-Tie System', panels: '14 × 600W', kwp: '8.4 kWp', battery: 0, blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
-  { id: 'g12',  type: 'grid',   name: '12kW Grid-Tie System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 0, blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
+  { id: 'g6',   type: 'grid',   name: '6kW Grid-Tie System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 0, blurb: 'Lower your bill with solar, no battery.',      price: 160000, popular: true },
+  { id: 'g8',   type: 'grid',   name: '8kW Grid-Tie System',  panels: '10 × 600W', kwp: '6 kWp', battery: 0, blurb: 'A popular size for homes with daytime use.',   price: 200000, popular: false },
+  { id: 'g10',  type: 'grid',   name: '10kW Grid-Tie System', panels: '14 × 600W', kwp: '8.4 kWp', battery: 0, blurb: 'For medium homes running air conditioning.',   price: 250000, popular: false },
+  { id: 'g12',  type: 'grid',   name: '12kW Grid-Tie System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 0, blurb: 'Larger households or small businesses.',       price: 300000, popular: false },
 ];
 
 const ADDONS = [
