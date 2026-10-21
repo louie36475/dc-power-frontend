@@ -13,7 +13,7 @@ gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 function ScrollManager() {
-  const { pathname, hash, key } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
     if (hash) {
@@ -24,11 +24,12 @@ function ScrollManager() {
         return;
       }
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, [pathname, hash, key]);
+    window.scrollTo(0, 0);
+  }, [pathname, hash]);
 
   return null;
 }
+
 export default function App() {
   return (
     <>
