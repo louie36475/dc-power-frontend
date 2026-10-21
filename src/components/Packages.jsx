@@ -44,8 +44,8 @@ const PACKAGES = [
 ];
 
 const ADDONS = [
-  { id: 'battery', name: 'Extra Battery Module',    specs: '5.12kWh LiFePO4',                             price: 95000, from: true,  hybridOnly: true },
-  { id: 'panels',  name: 'Additional Solar Panels', specs: '2 × 550W, mounting + cable + labor included', price: 22000, from: false, hybridOnly: false },
+  { id: 'battery', name: 'Extra Battery Module',    specs: '5.12kWh LiFePO4', price: 95000, from: true,  hybridOnly: true },
+  { id: 'panels',  name: 'Additional Solar Panels', specs: '1 × 600W', price: 7000, from: false, hybridOnly: false },
 ];
 
 const fmt = (n) => '₱' + Math.round(n).toLocaleString('en-PH');
