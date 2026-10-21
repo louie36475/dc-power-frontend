@@ -13,19 +13,21 @@ gsap.registerPlugin(ScrollTrigger);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 function ScrollManager() {
-  const { pathname, hash } = useLocation();
+  const { pathname, hash, key } = useLocation();
 
   useEffect(() => {
     if (hash) {
-      // let the target page render first, then jump to the section
       const el = document.querySelector(hash);
       if (el) {
         setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 50);
         return;
       }
     }
+    // Agad (hindi smooth) para siguradong umaabot sa taas, kahit sa phone
     window.scrollTo(0, 0);
-  }, [pathname, hash]);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [pathname, hash, key]);
 
   return null;
 }
