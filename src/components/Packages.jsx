@@ -7,28 +7,49 @@ const TITLE = 'Package Pricing';
 const INTEREST_RATE = 0; // taunang interes, hal. 0.12 = 12%
 const TERMS = [0, 12, 24, 36]; // 0 = cash
 
-const INCLUDES = [
-  'Solar panels',
-  'Hybrid inverter',
-  'Battery storage',
-  'Installation by our crew',
-  'Lifetime after-sales support',
+const TYPES = [
+  { id: 'hybrid', label: 'Hybrid (with battery)' },
+  { id: 'grid', label: 'Grid-Tie' },
 ];
 
-// price = numero lang (walang ₱ o comma)
+const INCLUDES = {
+  hybrid: [
+    'Solar panels',
+    'Hybrid inverter',
+    'Battery storage',
+    'Installation by our crew',
+    'Lifetime after-sales support',
+  ],
+  grid: [
+    'Solar panels',
+    'Grid-tie inverter',
+    'Net metering assistance',
+    'Installation by our crew',
+    'Lifetime after-sales support',
+  ],
+};
+
+// price = numero lang (walang ₱ o comma). battery: 0 = walang battery
 const PACKAGES = [
-  { id: '6kw',  name: '6kW Hybrid System',  panels: '8 × 550W',  kwp: '4.4 kWp', battery: '10 kWh', blurb: 'Entry-level hybrid for smaller homes.',        price: 320000, popular: true },
-  { id: '8kw',  name: '8kW Hybrid System',  panels: '10 × 550W', kwp: '5.5 kWp', battery: '10 kWh', blurb: 'Our most popular size for Filipino homes.',    price: 370000, popular: false },
-  { id: '10kw', name: '10kW Hybrid System', panels: '14 × 550W', kwp: '7.7 kWp', battery: '10 kWh', blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
-  { id: '12kw', name: '12kW Hybrid System', panels: '16 × 550W', kwp: '8.8 kWp', battery: '16 kWh', blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
+  // Hybrid
+  { id: '6kw',  type: 'hybrid', name: '6kW Hybrid System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 10, blurb: 'Entry-level hybrid for smaller homes.',        price: 320000, popular: true },
+  { id: '8kw',  type: 'hybrid', name: '8kW Hybrid System',  panels: '10 × 600W', kwp: '6 kWp', battery: 10, blurb: 'Our most popular size for Filipino homes.',    price: 370000, popular: false },
+  { id: '10kw', type: 'hybrid', name: '10kW Hybrid System', panels: '14 × 600W', kwp: '8.4 kWp', battery: 10, blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
+  { id: '12kw', type: 'hybrid', name: '12kW Hybrid System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 16, blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
+  // Grid-tie (placeholder: parehong presyo ng hybrid)
+  { id: 'g6',   type: 'grid',   name: '6kW Grid-Tie System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 0, blurb: 'Lower your bill with solar, no battery.',      price: 320000, popular: false },
+  { id: 'g8',   type: 'grid',   name: '8kW Grid-Tie System',  panels: '10 × 600W', kwp: '6 kWp', battery: 0, blurb: 'A popular size for homes with daytime use.',   price: 370000, popular: true },
+  { id: 'g10',  type: 'grid',   name: '10kW Grid-Tie System', panels: '14 × 600W', kwp: '8.4 kWp', battery: 0, blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
+  { id: 'g12',  type: 'grid',   name: '12kW Grid-Tie System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 0, blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
 ];
 
 const ADDONS = [
-  { id: 'battery', name: 'Extra Battery Module',    specs: '5.12kWh LiFePO4',                                 price: 95000, from: true },
-  { id: 'panels',  name: 'Additional Solar Panels', specs: '2 × 550W, mounting + cable + labor included',     price: 22000, from: false },
+  { id: 'battery', name: 'Extra Battery Module',    specs: '5.12kWh LiFePO4',                             price: 95000, from: true,  hybridOnly: true },
+  { id: 'panels',  name: 'Additional Solar Panels', specs: '2 × 550W, mounting + cable + labor included', price: 22000, from: false, hybridOnly: false },
 ];
 
 const fmt = (n) => '₱' + Math.round(n).toLocaleString('en-PH');
+const batteryText = (b) => (b ? `${b} kWh` : 'None');
 
 const monthly = (total, months) => {
   if (!months) return total;
@@ -37,17 +58,30 @@ const monthly = (total, months) => {
   return (total * r) / (1 - Math.pow(1 + r, -months));
 };
 
+const popularIndex = (list) => Math.max(0, list.findIndex((p) => p.popular));
+
 export default function Packages() {
   const rootRef = useRef(null);
   const headRef = useRef(null);
   const touchX = useRef(null);
-  const [active, setActive] = useState(Math.max(0, PACKAGES.findIndex((p) => p.popular)));
+  const [type, setType] = useState('hybrid');
+  const [active, setActive] = useState(popularIndex(PACKAGES.filter((p) => p.type === 'hybrid')));
   const [term, setTerm] = useState(0);
   const [picked, setPicked] = useState([]);
   const [shown, setShown] = useState(false);
-  const n = PACKAGES.length;
+
+  const list = PACKAGES.filter((p) => p.type === type);
+  const n = list.length;
+  const addons = ADDONS.filter((a) => !a.hybridOnly || type === 'hybrid');
 
   const go = (dir) => setActive((i) => (i + dir + n) % n);
+
+  const changeType = (t) => {
+    if (t === type) return;
+    setType(t);
+    setActive(popularIndex(PACKAGES.filter((p) => p.type === t)));
+    setPicked([]);
+  };
 
   // Title reveal: nagsisimula kapag nakita na ang heading mismo
   useEffect(() => {
@@ -87,8 +121,8 @@ export default function Packages() {
   const toggleAddon = (id) =>
     setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
 
-  const pkg = PACKAGES[active];
-  const chosen = ADDONS.filter((a) => picked.includes(a.id));
+  const pkg = list[active];
+  const chosen = addons.filter((a) => picked.includes(a.id));
   const addonTotal = chosen.reduce((s, a) => s + a.price, 0);
   const total = pkg.price + addonTotal;
   const hasFrom = chosen.some((a) => a.from);
@@ -127,16 +161,33 @@ export default function Packages() {
             </h2>
             <span className="pk-underline" aria-hidden="true" />
             <p className="pk-sub">
-              All-in pricing includes panels, inverter, battery, and installation. Your final quote
+              All-in pricing includes panels, inverter, and installation. Your final quote
               depends on brand availability, add-ons, and a site assessment.
             </p>
           </div>
           <a href="#pk-compare" className="pk-more">Compare packages ↓</a>
         </div>
 
+        {/* Type toggle */}
+        <div className="pk-type" role="tablist" aria-label="System type">
+          {TYPES.map((t) => (
+            <button
+              key={t.id}
+              type="button"
+              role="tab"
+              aria-selected={type === t.id}
+              className={`pk-type-btn ${type === t.id ? 'active' : ''}`}
+              onClick={() => changeType(t.id)}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+
         {/* Coverflow */}
         <div
           className="pk-stage"
+          key={type}
           tabIndex={0}
           onKeyDown={onKeyDown}
           onTouchStart={onTouchStart}
@@ -144,7 +195,7 @@ export default function Packages() {
           aria-roledescription="carousel"
           aria-label="Solar packages"
         >
-          {PACKAGES.map((p, i) => {
+          {list.map((p, i) => {
             const d = offsetOf(i);
             const abs = Math.abs(d);
             const isActive = d === 0;
@@ -172,11 +223,14 @@ export default function Packages() {
               >
                 {p.popular && <div className="pk-badge">Popular</div>}
                 <h3>{p.name}</h3>
-                <p className="pk-specs">{p.panels} panels · {p.kwp} · {p.battery} battery</p>
+                <p className="pk-specs">
+                  {p.panels} panels · {p.kwp}
+                  {p.battery ? ` · ${p.battery} kWh battery` : ' · no battery'}
+                </p>
                 <p className="pk-blurb">{p.blurb}</p>
 
                 <ul className="pk-includes">
-                  {INCLUDES.map((x) => (
+                  {INCLUDES[p.type].map((x) => (
                     <li key={x}>
                       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                         <path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
@@ -196,7 +250,7 @@ export default function Packages() {
         </div>
 
         <div className="pk-dots" role="tablist" aria-label="Choose package">
-          {PACKAGES.map((p, i) => (
+          {list.map((p, i) => (
             <button
               key={p.id}
               type="button"
@@ -234,7 +288,7 @@ export default function Packages() {
 
             <h4 className="pk-h4-gap">Add-ons</h4>
             <div className="pk-addons">
-              {ADDONS.map((a) => (
+              {addons.map((a) => (
                 <label key={a.id} className={`pk-addon ${picked.includes(a.id) ? 'on' : ''}`}>
                   <input
                     type="checkbox"
@@ -278,7 +332,7 @@ export default function Packages() {
 
         {/* Compare */}
         <div className="pk-compare" id="pk-compare">
-          <h4>Compare all packages</h4>
+          <h4>Compare {type === 'hybrid' ? 'hybrid' : 'grid-tie'} packages</h4>
           <div className="pk-table-wrap">
             <table className="pk-table">
               <thead>
@@ -291,7 +345,7 @@ export default function Packages() {
                 </tr>
               </thead>
               <tbody>
-                {PACKAGES.map((p, i) => (
+                {list.map((p, i) => (
                   <tr
                     key={p.id}
                     className={i === active ? 'on' : ''}
@@ -303,7 +357,7 @@ export default function Packages() {
                     </td>
                     <td>{p.panels}</td>
                     <td>{p.kwp}</td>
-                    <td>{p.battery}</td>
+                    <td>{batteryText(p.battery)}</td>
                     <td className="mono">{fmt(p.price)}</td>
                   </tr>
                 ))}

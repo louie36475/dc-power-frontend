@@ -7,8 +7,8 @@ import './SizeCalculator.css';
 const RATE_PER_KWH = 12; // ₱ per kWh, typical residential rate
 const PEAK_SUN_HOURS = 4.5; // average usable sun hours/day, PH-wide
 const SYSTEM_DERATE = 0.8; // inverter/wiring/soiling/temperature losses
-const PANEL_WATTAGE = 450; // W per panel
-const PANEL_AREA_SQM = 2.3; // roof area per panel incl. spacing
+const PANEL_WATTAGE = 600; // W per panel
+const PANEL_AREA_SQM = 2.7; // roof area per panel incl. spacing
 const BATTERY_USABLE_FRACTION = 0.9; // usable depth-of-discharge, LiFePO4
 const BATTERY_STEP_KWH = 5; // round suggested battery size to this step
 
@@ -59,6 +59,7 @@ export default function SizeCalculator({ onEstimate }) {
   const dailyKwh = monthlyKwh / 30;
   const recommendedKwp = dailyKwh / (PEAK_SUN_HOURS * SYSTEM_DERATE);
   const numPanels = Math.ceil((recommendedKwp * 1000) / PANEL_WATTAGE);
+  const installedKwp = (numPanels * PANEL_WATTAGE) / 1000; // totoong laki ng mga panel
   const roofArea = numPanels * PANEL_AREA_SQM;
 
   const dayPercent = 100 - nightPercent;
@@ -88,7 +89,7 @@ export default function SizeCalculator({ onEstimate }) {
   }
 
   // Animated na numero
-  const shownKwp = useTween(hasInput ? recommendedKwp : 0);
+  const shownKwp = useTween(hasInput ? installedKwp : 0);
   const shownPanels = useTween(hasInput ? numPanels : 0);
   const shownRoof = useTween(hasInput ? roofArea : 0);
   const shownBattery = useTween(hasInput ? suggestedBatteryKwh : 0);
@@ -104,7 +105,7 @@ export default function SizeCalculator({ onEstimate }) {
     onEstimate({
       monthlyBill: mode === 'bill' ? Math.round(billNum) : null,
       monthlyKwh: Math.round(monthlyKwh),
-      kwp: Number(recommendedKwp.toFixed(1)),
+      kwp: Number(installedKwp.toFixed(1)),
       panels: numPanels,
       roofArea: Math.round(roofArea),
       nightPercent,
@@ -136,7 +137,7 @@ export default function SizeCalculator({ onEstimate }) {
 
   const cells = Math.min(hasInput ? numPanels : 0, MAX_CELLS);
   const extra = hasInput ? Math.max(0, numPanels - MAX_CELLS) : 0;
-  const ringFill = hasInput ? Math.min(1, recommendedKwp / MAX_KWP) : 0;
+  const ringFill = hasInput ? Math.min(1, installedKwp / MAX_KWP) : 0;
   const batteryFill = hasInput ? Math.min(1, suggestedBatteryKwh / MAX_BATTERY) : 0;
 
   return (
@@ -263,7 +264,7 @@ export default function SizeCalculator({ onEstimate }) {
             <div className="cc-mini">
               <div>
                 <strong className="mono">{hasInput ? Math.round(shownPanels) : '—'}</strong>
-                <span>panels (450W each)</span>
+                <span>panels ({PANEL_WATTAGE}W each)</span>
               </div>
               <div>
                 <strong className="mono">{hasInput ? `${Math.round(shownRoof)} m²` : '—'}</strong>

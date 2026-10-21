@@ -170,7 +170,7 @@ export default function Contact() {
   const estimateFields = estimate
     ? {
         estimate_system_size: `${estimate.kwp} kWp`,
-        estimate_panels: `${estimate.panels} panels (450W each)`,
+        estimate_panels: `${estimate.panels} panels (600W each)`,
         estimate_roof_area: `${estimate.roofArea} m2`,
         estimate_monthly_usage: `${estimate.monthlyKwh} kWh per month`,
         ...(estimate.monthlyBill ? { estimate_monthly_bill: `PHP ${estimate.monthlyBill}` } : {}),
