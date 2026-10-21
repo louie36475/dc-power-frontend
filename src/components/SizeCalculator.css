@@ -392,3 +392,6 @@
   .cc-ring-fg,
   .cc-battery span { transition: none; }
 }
+.calc-out {
+  min-height: 460px;
+}
