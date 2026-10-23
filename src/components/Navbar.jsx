@@ -90,7 +90,7 @@ export default function Navbar() {
 
           <div className="nav-actions">
             <Link to="/#contact" className="btn btn-primary nav-quote" onClick={closeAll}>
-  Request a Free Quote
+                Request a Free Quote
 </Link>
           </div>
         </div>
