@@ -85,11 +85,11 @@ export default function Navbar() {
               </div>
             </div>
 
-            <Link to="/#contact" onClick={closeAll}>Contact Us</Link>
+            <Link to="/#footer" onClick={closeAll}>Contact Us</Link>
           </div>
 
           <div className="nav-actions">
-            <Link to="/#contact" className="btn btn-primary nav-quote" onClick={closeAll}>
+            <Link to="/#footer" className="btn btn-primary nav-quote" onClick={closeAll}>
   Request a Free Quote
 </Link>
           </div>

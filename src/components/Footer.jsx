@@ -29,8 +29,8 @@ export default function Footer() {
   const [areaOpen, setAreaOpen] = useState(false);
 
   return (
-    <footer>
-      <div className="wrap">
+  <footer id="footer">
+    <div className="wrap">
         <div className="footer-grid">
           {/* Brand */}
           <div className="footer-brand">
