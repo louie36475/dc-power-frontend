@@ -1,0 +1,106 @@
+.preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  overflow: hidden;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.6s cubic-bezier(0.22, 0.8, 0.3, 1);
+}
+.preloader.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-16px);
+}
+
+.pl-glow {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(242, 180, 72, 0.22), transparent 68%);
+  animation: pl-breathe 2.4s ease-in-out infinite;
+}
+@keyframes pl-breathe {
+  0%, 100% { transform: scale(0.92); opacity: 0.7; }
+  50%      { transform: scale(1.08); opacity: 1; }
+}
+
+.pl-center {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pl-logo {
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  background: #f6efec;
+  border: 1px solid #eadcd6;
+  box-shadow: 0 16px 40px rgba(43, 18, 24, 0.12);
+  animation: pl-float 2s ease-in-out infinite;
+}
+.pl-logo img {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
+@keyframes pl-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.pl-name {
+  margin-top: 22px;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #2b1218;
+}
+
+.pl-bar {
+  width: 200px;
+  height: 4px;
+  margin-top: 20px;
+  border-radius: 4px;
+  background: #eadcd6;
+  overflow: hidden;
+}
+.pl-bar span {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #f2b448, var(--gold));
+}
+/* Nagre-restart ang bar tuwing lalabas ang loader */
+.preloader:not(.hide) .pl-bar span {
+  animation: pl-fill 1.6s cubic-bezier(0.22, 0.8, 0.3, 1) forwards;
+}
+@keyframes pl-fill {
+  0%   { width: 0; }
+  70%  { width: 82%; }
+  100% { width: 92%; }
+}
+
+.pl-text {
+  margin-top: 14px;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #6b5a55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pl-glow,
+  .pl-logo { animation: none; }
+}
