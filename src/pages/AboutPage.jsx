@@ -1,17 +1,18 @@
 import About from '../components/About';
+import AboutValues from '../components/AboutValues';
+import PageHeader from '../components/PageHeader';
 import './pages.css';
 
 export default function AboutPage() {
   return (
     <>
-      <div className="page-header">
-        <div className="wrap">
-          <div className="eyebrow">ABOUT US</div>
-          <h1>Who we are</h1>
-          <p>A small, licensed crew installing solar and battery backup systems across the Philippines.</p>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow="ABOUT US"
+        title="Who we are"
+        text="A small, licensed crew installing solar and battery backup systems across the Philippines."
+      />
       <About />
+      <AboutValues />
     </>
   );
 }

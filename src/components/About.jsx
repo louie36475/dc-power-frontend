@@ -25,19 +25,40 @@ export default function About() {
   const [showTeams, setShowTeams] = useState(false);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
     const ctx = gsap.context(() => {
+      const once = (trigger, start = 'top 85%') => ({ trigger, start, once: true });
+
       gsap.fromTo(
-        '.reveal-item',
-        { y: 20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.12,
-          ease: 'power3.out',
-          scrollTrigger: { trigger: rootRef.current, start: 'top 85%', once: true },
-        }
+        '.ab-left > *',
+        { y: 26, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.14, ease: 'power3.out', scrollTrigger: once('.about-grid') }
       );
+
+      gsap.fromTo(
+        '.about-copy p',
+        { y: 22, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.14, ease: 'power3.out', scrollTrigger: once('.about-copy') }
+      );
+
+      gsap.fromTo(
+        '.fact-list > *',
+        { y: 18, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out', scrollTrigger: once('.fact-list', 'top 90%') }
+      );
+
+      gsap.fromTo(
+        '.fact-list',
+        { '--lineW': '0%' },
+        { '--lineW': '100%', duration: 1.1, ease: 'power3.out', scrollTrigger: once('.fact-list', 'top 90%') }
+      );
+
+      gsap.to('.ab-glow', {
+        yPercent: -35,
+        ease: 'none',
+        scrollTrigger: { trigger: rootRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
+      });
     }, rootRef);
 
     const refresh = () => ScrollTrigger.refresh();
@@ -51,12 +72,10 @@ export default function About() {
     };
   }, []);
 
-  // Habang bukas ang dropdown: Esc o click sa labas = isara
+  // Esc o click sa labas = isara ang dropdown
   useEffect(() => {
     if (!showTeams) return;
-    const onKey = (e) => {
-      if (e.key === 'Escape') setShowTeams(false);
-    };
+    const onKey = (e) => e.key === 'Escape' && setShowTeams(false);
     const onClickOutside = (e) => {
       if (teamsRef.current && !teamsRef.current.contains(e.target)) setShowTeams(false);
     };
@@ -70,12 +89,16 @@ export default function About() {
 
   return (
     <section id="about" ref={rootRef}>
+      <div className="ab-glow" aria-hidden="true" />
+
       <div className="wrap about-grid">
-        <div className="reveal-item">
+        <div className="ab-left">
           <div className="eyebrow">ABOUT DC POWER</div>
           <h2>Built for how the grid actually behaves here</h2>
+          <span className="ab-line" aria-hidden="true" />
         </div>
-        <div className="about-copy reveal-item">
+
+        <div className="about-copy">
           <p>
             The Philippines gets some of the highest solar irradiance in Asia, and some of the
             most frequent brownouts. Most solar companies size for the first fact and ignore the
@@ -86,6 +109,7 @@ export default function About() {
             We're a small crew of licensed electricians and installers, not a sales franchise.
             The person who quotes your system is the person who signs off on the install.
           </p>
+
           <div className="fact-list">
             {FACTS.map((f) =>
               f.action === 'teams' ? (
@@ -106,10 +130,7 @@ export default function About() {
                     </button>
                   </div>
 
-                  <div
-                    id="teams-dropdown"
-                    className={`teams-dropdown ${showTeams ? 'open' : ''}`}
-                  >
+                  <div id="teams-dropdown" className={`teams-dropdown ${showTeams ? 'open' : ''}`}>
                     <ul className="teams-list">
                       {TEAMS.map((t) => (
                         <li className="team-item" key={`${t.name}-${t.city}`}>
