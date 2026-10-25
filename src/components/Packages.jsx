@@ -32,20 +32,18 @@ const INCLUDES = {
 // price = numero lang (walang ₱ o comma). battery: 0 = walang battery
 const PACKAGES = [
   // Hybrid
-  { id: '6kw',  type: 'hybrid', name: '6kW Hybrid System',  panels: '8 × 550W',  kwp: '4.4 kWp', battery: 10, blurb: 'Entry-level hybrid for smaller homes.',        price: 320000, popular: true },
-  { id: '8kw',  type: 'hybrid', name: '8kW Hybrid System',  panels: '10 × 550W', kwp: '5.5 kWp', battery: 10, blurb: 'Our most popular size for Filipino homes.',    price: 370000, popular: false },
-  { id: '10kw', type: 'hybrid', name: '10kW Hybrid System', panels: '14 × 550W', kwp: '7.7 kWp', battery: 10, blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
-  { id: '12kw', type: 'hybrid', name: '12kW Hybrid System', panels: '16 × 550W', kwp: '8.8 kWp', battery: 16, blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
+  { id: '6kw',  type: 'hybrid', name: '6kW Hybrid System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 10, blurb: 'Entry-level hybrid for smaller homes.',        price: 280000, popular: true },
+  { id: '8kw',  type: 'hybrid', name: '8kW Hybrid System',  panels: '10 × 600W', kwp: '6 kWp', battery: 10, blurb: 'Our most popular size for Filipino homes.',    price: 340000, popular: false },
+  { id: '12kw', type: 'hybrid', name: '12kW Hybrid System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 16, blurb: 'Larger households or small businesses.',       price: 420000, popular: false },
   // Grid-tie (placeholder: parehong presyo ng hybrid)
-  { id: 'g6',   type: 'grid',   name: '6kW Grid-Tie System',  panels: '8 × 550W',  kwp: '4.4 kWp', battery: 0, blurb: 'Lower your bill with solar, no battery.',      price: 320000, popular: false },
-  { id: 'g8',   type: 'grid',   name: '8kW Grid-Tie System',  panels: '10 × 550W', kwp: '5.5 kWp', battery: 0, blurb: 'A popular size for homes with daytime use.',   price: 370000, popular: true },
-  { id: 'g10',  type: 'grid',   name: '10kW Grid-Tie System', panels: '14 × 550W', kwp: '7.7 kWp', battery: 0, blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
-  { id: 'g12',  type: 'grid',   name: '12kW Grid-Tie System', panels: '16 × 550W', kwp: '8.8 kWp', battery: 0, blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
+  { id: 'g6',   type: 'grid',   name: '6kW Grid-Tie System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 0, blurb: 'Lower your bill with solar, no battery.',      price: 160000, popular: false },
+  { id: 'g8',   type: 'grid',   name: '8kW Grid-Tie System',  panels: '10 × 600W', kwp: '6 kWp', battery: 0, blurb: 'A popular size for homes with daytime use.',   price: 200000, popular: true },
+  { id: 'g12',  type: 'grid',   name: '12kW Grid-Tie System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 0, blurb: 'Larger households or small businesses.',       price: 300000, popular: false },
 ];
 
 const ADDONS = [
   { id: 'battery', name: 'Extra Battery Module',    specs: '5.12kWh LiFePO4',                             price: 95000, from: true,  hybridOnly: true },
-  { id: 'panels',  name: 'Additional Solar Panels', specs: '2 × 550W, mounting + cable + labor included', price: 22000, from: false, hybridOnly: false },
+  { id: 'panels',  name: 'Additional Solar Panels', specs: '1 × 600W, mounting + cable + labor included', price: 7000, from: false, hybridOnly: false },
 ];
 
 const fmt = (n) => '₱' + Math.round(n).toLocaleString('en-PH');

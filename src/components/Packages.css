@@ -603,3 +603,35 @@
     ),
     url('/inverter1.png');
 }
+.pk-card.has-art {
+  padding-top: 250px;
+}
+.pk-stage { height: 780px; }
+@media (max-width: 900px) {
+  .pk-stage { height: 760px; }
+}
+.pk-card h3 {
+  color: #2b1218;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.pk-specs {
+  color: #4a3a36;
+  font-weight: 500;
+}
+.pk-blurb {
+  color: #2b1218;
+  font-weight: 500;
+}
+.pk-includes li {
+  color: #2b1218;
+  font-weight: 500;
+}
+.pk-includes svg {
+  color: #c97800;
+}
+.pk-price-label {
+  color: #4a3a36;
+}
+.pk-price-num {
+  color: #8a4f00;
+}
