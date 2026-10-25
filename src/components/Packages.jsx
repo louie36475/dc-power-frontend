@@ -18,32 +18,34 @@ const INCLUDES = {
     'Hybrid inverter',
     'Battery storage',
     'Installation by our crew',
-    'After-sales support',
+    'Lifetime after-sales support',
   ],
   grid: [
     'Solar panels',
     'Grid-tie inverter',
     'Net metering assistance',
     'Installation by our crew',
-    'After-sales support',
+    'Lifetime after-sales support',
   ],
 };
 
 // price = numero lang (walang ₱ o comma). battery: 0 = walang battery
 const PACKAGES = [
   // Hybrid
-  { id: '6kw',  type: 'hybrid', name: '6kW Hybrid System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 10, blurb: 'Entry-level hybrid for smaller homes.',        price: 280000, popular: true },
-  { id: '8kw',  type: 'hybrid', name: '8kW Hybrid System',  panels: '10 × 600W', kwp: '6 kWp', battery: 10, blurb: 'Our most popular size for Filipino homes.',    price: 340000, popular: false },
-  { id: '12kw', type: 'hybrid', name: '12kW Hybrid System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 16, blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
+  { id: '6kw',  type: 'hybrid', name: '6kW Hybrid System',  panels: '8 × 550W',  kwp: '4.4 kWp', battery: 10, blurb: 'Entry-level hybrid for smaller homes.',        price: 320000, popular: true },
+  { id: '8kw',  type: 'hybrid', name: '8kW Hybrid System',  panels: '10 × 550W', kwp: '5.5 kWp', battery: 10, blurb: 'Our most popular size for Filipino homes.',    price: 370000, popular: false },
+  { id: '10kw', type: 'hybrid', name: '10kW Hybrid System', panels: '14 × 550W', kwp: '7.7 kWp', battery: 10, blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
+  { id: '12kw', type: 'hybrid', name: '12kW Hybrid System', panels: '16 × 550W', kwp: '8.8 kWp', battery: 16, blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
   // Grid-tie (placeholder: parehong presyo ng hybrid)
-  { id: 'g6',   type: 'grid',   name: '6kW Grid-Tie System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 0, blurb: 'Lower your bill with solar, no battery.',      price: 160000, popular: true },
-  { id: 'g8',   type: 'grid',   name: '8kW Grid-Tie System',  panels: '10 × 600W', kwp: '6 kWp', battery: 0, blurb: 'A popular size for homes with daytime use.',   price: 200000, popular: false },
-  { id: 'g12',  type: 'grid',   name: '12kW Grid-Tie System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 0, blurb: 'Larger households or small businesses.',       price: 300000, popular: false },
+  { id: 'g6',   type: 'grid',   name: '6kW Grid-Tie System',  panels: '8 × 550W',  kwp: '4.4 kWp', battery: 0, blurb: 'Lower your bill with solar, no battery.',      price: 320000, popular: false },
+  { id: 'g8',   type: 'grid',   name: '8kW Grid-Tie System',  panels: '10 × 550W', kwp: '5.5 kWp', battery: 0, blurb: 'A popular size for homes with daytime use.',   price: 370000, popular: true },
+  { id: 'g10',  type: 'grid',   name: '10kW Grid-Tie System', panels: '14 × 550W', kwp: '7.7 kWp', battery: 0, blurb: 'For medium homes running air conditioning.',   price: 340000, popular: false },
+  { id: 'g12',  type: 'grid',   name: '12kW Grid-Tie System', panels: '16 × 550W', kwp: '8.8 kWp', battery: 0, blurb: 'Larger households or small businesses.',       price: 450000, popular: false },
 ];
 
 const ADDONS = [
-  { id: 'battery', name: 'Extra Battery Module',    specs: '5.12kWh LiFePO4', price: 95000, from: true,  hybridOnly: true },
-  { id: 'panels',  name: 'Additional Solar Panels', specs: '1 × 600W', price: 7000, from: false, hybridOnly: false },
+  { id: 'battery', name: 'Extra Battery Module',    specs: '5.12kWh LiFePO4',                             price: 95000, from: true,  hybridOnly: true },
+  { id: 'panels',  name: 'Additional Solar Panels', specs: '2 × 550W, mounting + cable + labor included', price: 22000, from: false, hybridOnly: false },
 ];
 
 const fmt = (n) => '₱' + Math.round(n).toLocaleString('en-PH');
@@ -118,6 +120,22 @@ export default function Packages() {
 
   const toggleAddon = (id) =>
     setPicked((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]));
+
+  // 3D tilt + glare na sumusunod sa mouse (gitnang card lang)
+  const tilt = (e) => {
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    el.style.setProperty('--ry', `${(px - 0.5) * 10}deg`);
+    el.style.setProperty('--rx', `${-(py - 0.5) * 10}deg`);
+    el.style.setProperty('--gx', `${px * 100}%`);
+    el.style.setProperty('--gy', `${py * 100}%`);
+  };
+  const untilt = (e) => {
+    e.currentTarget.style.setProperty('--ry', '0deg');
+    e.currentTarget.style.setProperty('--rx', '0deg');
+  };
 
   const pkg = list[active];
   const chosen = addons.filter((a) => picked.includes(a.id));
@@ -200,8 +218,7 @@ export default function Packages() {
             return (
               <div
                 key={p.id}
-                className={`pk-card ${isActive ? 'is-active' : ''} ${p.popular ? 'is-popular' : ''}`}
-                style={{
+                className={`pk-card has-art ${p.type === 'grid' ? 'art-grid' : 'art-hybrid'} ${isActive ? 'is-active' : ''} ${p.popular ? 'is-popular' : ''}`}style={{
                   '--d': d,
                   '--abs': Math.min(abs, 3),
                   zIndex: 10 - abs,
@@ -209,6 +226,8 @@ export default function Packages() {
                   pointerEvents: abs > 2 ? 'none' : 'auto',
                 }}
                 onClick={() => !isActive && setActive(i)}
+                onMouseMove={isActive ? tilt : undefined}
+                onMouseLeave={isActive ? untilt : undefined}
                 onKeyDown={(e) => {
                   if (!isActive && (e.key === 'Enter' || e.key === ' ')) {
                     e.preventDefault();
@@ -220,6 +239,7 @@ export default function Packages() {
                 aria-label={isActive ? p.name : `Show ${p.name}`}
               >
                 {p.popular && <div className="pk-badge">Popular</div>}
+
                 <h3>{p.name}</h3>
                 <p className="pk-specs">
                   {p.panels} panels · {p.kwp}
@@ -242,6 +262,8 @@ export default function Packages() {
                   <span className="pk-price-label">All-in installed</span>
                   <span className="pk-price-num mono">{fmt(p.price)}</span>
                 </div>
+
+                <span className="pk-glare" aria-hidden="true" />
               </div>
             );
           })}
