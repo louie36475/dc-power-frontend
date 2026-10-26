@@ -65,13 +65,13 @@ export default function Hero() {
           <div className="hero-content">
             <div className="eyebrow hero-eyebrow hero-anim hero-anim--1">
               <span className="dot" />
-              NOW BOOKING Q4 INSTALLS
+              NOW BOOKING FOR INSTALLATIONS.
             </div>
 
             <h1 className="hero-anim hero-anim--2">
-              Every roof here already
+              Engineered Precision
               <br />
-              catches enough sun. <span className="hero-gradient-text">We wire it home.</span>
+              <span className="hero-gradient-text">Driven by Innovation</span>
             </h1>
 
             <p className="lead hero-anim hero-anim--3">
