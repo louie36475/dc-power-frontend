@@ -18,7 +18,7 @@ const INCLUDES = {
     'Hybrid inverter',
     'Battery storage',
     'Installation by our crew',
-    'Lifetime after-sales support',
+    'After-sales support',
   ],
   grid: [
     'Solar panels',
