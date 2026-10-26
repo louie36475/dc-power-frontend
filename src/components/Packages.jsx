@@ -25,7 +25,7 @@ const INCLUDES = {
     'Grid-tie inverter',
     'Net metering assistance',
     'Installation by our crew',
-    'Lifetime after-sales support',
+    'After-sales support',
   ],
 };
 
@@ -385,7 +385,7 @@ export default function Packages() {
         </div>
 
         <p className="pk-note">
-          All systems include lifetime after-sales support. Prices shown are placeholders — swap
+          All systems include after-sales support. Prices shown are placeholders — swap
           in your real package lineup and figures before launch.
         </p>
       </div>
