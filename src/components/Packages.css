@@ -118,43 +118,12 @@
   transform: translateY(-2px);
 }
 
-/* Hybrid / Grid-Tie toggle */
-.pk-type {
-  display: inline-flex;
-  margin-top: 36px;
-  padding: 4px;
-  border-radius: 12px;
-  background: #f6efec;
-  border: 1px solid #e3d3cc;
-}
-.pk-type-btn {
-  border: none;
-  background: transparent;
-  color: #4a3a36;
-  font-family: inherit;
-  font-size: 0.9rem;
-  font-weight: 600;
-  padding: 10px 20px;
-  border-radius: 9px;
-  cursor: pointer;
-  transition: background 0.2s var(--ease), color 0.2s var(--ease);
-}
-.pk-type-btn:hover { color: #2b1218; }
-.pk-type-btn.active {
-  background: var(--gold);
-  color: #1a1206;
-}
-.pk-type-btn:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 2px;
-}
-
 /* Coverflow */
 .pk-stage {
   --shift: 72%;
   position: relative;
-  height: 640px;
-  margin-top: 24px;
+  height: 780px;
+  margin-top: 40px;
   perspective: 1400px;
   outline: none;
 }
@@ -191,8 +160,14 @@
   box-shadow: 0 26px 60px rgba(43, 18, 24, 0.24);
 }
 
-/* Hybrid cards: inverter.png bilang background ng buong card */
+/* Larawan bilang background ng card (iba ang larawan ng bawat uri) */
 .pk-card.has-art {
+  padding-top: 250px;
+  background-repeat: no-repeat, no-repeat;
+  background-size: cover, auto 52%;
+  background-position: center, center 14px;
+}
+.pk-card.art-hybrid {
   background-image:
     linear-gradient(
       to bottom,
@@ -203,9 +178,18 @@
       #f6efec 62%
     ),
     url('/inverter.png');
-  background-repeat: no-repeat, no-repeat;
-  background-size: cover, auto 52%;
-  background-position: center, center 14px;
+}
+.pk-card.art-grid {
+  background-image:
+    linear-gradient(
+      to bottom,
+      rgba(246, 239, 236, 0) 0%,
+      rgba(246, 239, 236, 0) 22%,
+      rgba(246, 239, 236, 0.72) 40%,
+      rgba(246, 239, 236, 0.94) 52%,
+      #f6efec 62%
+    ),
+    url('/inverter1.png');
 }
 .pk-card.has-art:not(.is-active) {
   background-color: #efe4de;
@@ -226,21 +210,38 @@
   text-transform: uppercase;
 }
 
+/* Badge ng uri */
+.pk-kind {
+  align-self: flex-start;
+  margin-bottom: 10px;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.pk-kind.hybrid { background: #2b1218; color: #f2b448; }
+.pk-kind.grid   { background: #1f6fd1; color: #fff; }
+
 .pk-card h3 {
   margin: 0;
   font-size: 1.3rem;
   font-weight: 700;
   color: #2b1218;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
 }
 .pk-specs {
   margin: 10px 0 0;
   font-size: 0.84rem;
   line-height: 1.5;
-  color: #5a4843;
+  font-weight: 500;
+  color: #4a3a36;
 }
 .pk-blurb {
   margin: 12px 0 0;
   font-size: 0.92rem;
+  font-weight: 500;
   color: #2b1218;
 }
 
@@ -259,11 +260,12 @@
   align-items: center;
   gap: 10px;
   font-size: 0.88rem;
+  font-weight: 500;
   color: #2b1218;
 }
 .pk-includes svg {
   flex-shrink: 0;
-  color: var(--gold);
+  color: #c97800;
 }
 
 .pk-price {
@@ -275,13 +277,13 @@
 }
 .pk-price-label {
   font-size: 0.76rem;
-  color: #5a4843;
+  color: #4a3a36;
 }
 .pk-price-num {
   margin-top: 2px;
   font-size: 1.9rem;
   font-weight: 500;
-  color: #2b1218;
+  color: #8a4f00;
 }
 
 /* Glare + sweep */
@@ -521,7 +523,7 @@
 }
 .pk-table {
   width: 100%;
-  min-width: 620px;
+  min-width: 700px;
   border-collapse: collapse;
   font-size: 0.92rem;
 }
@@ -564,74 +566,16 @@
 /* Tablet / mobile */
 @media (max-width: 900px) {
   #packages { padding: 90px 0 70px; }
-  .pk-stage { --shift: 62%; height: 620px; }
+  .pk-stage { --shift: 62%; height: 760px; }
   .pk-build { grid-template-columns: 1fr; padding: 22px; }
 }
 @media (max-width: 520px) {
   .pk-stage { --shift: 54%; }
   .pk-card { padding: 26px 22px 24px; }
-  .pk-type { display: flex; }
-  .pk-type-btn { flex: 1; padding: 10px 8px; font-size: 0.82rem; }
+  .pk-card.has-art { padding-top: 240px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .pk-word > span { opacity: 1; filter: none; transform: none; transition: none; }
   .pk-underline { width: 120px; transition: none; }
   .pk-card.is-active .pk-glare::after { animation: none; }
-}
-/* Iba ang larawan ng bawat uri */
-.pk-card.art-hybrid {
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(246, 239, 236, 0) 0%,
-      rgba(246, 239, 236, 0) 22%,
-      rgba(246, 239, 236, 0.72) 40%,
-      rgba(246, 239, 236, 0.94) 52%,
-      #f6efec 62%
-    ),
-    url('/inverter.png');
-}
-.pk-card.art-grid {
-  background-image:
-    linear-gradient(
-      to bottom,
-      rgba(246, 239, 236, 0) 0%,
-      rgba(246, 239, 236, 0) 22%,
-      rgba(246, 239, 236, 0.72) 40%,
-      rgba(246, 239, 236, 0.94) 52%,
-      #f6efec 62%
-    ),
-    url('/inverter1.png');
-}
-.pk-card.has-art {
-  padding-top: 250px;
-}
-.pk-stage { height: 780px; }
-@media (max-width: 900px) {
-  .pk-stage { height: 760px; }
-}
-.pk-card h3 {
-  color: #2b1218;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
-}
-.pk-specs {
-  color: #4a3a36;
-  font-weight: 500;
-}
-.pk-blurb {
-  color: #2b1218;
-  font-weight: 500;
-}
-.pk-includes li {
-  color: #2b1218;
-  font-weight: 500;
-}
-.pk-includes svg {
-  color: #c97800;
-}
-.pk-price-label {
-  color: #4a3a36;
-}
-.pk-price-num {
-  color: #8a4f00;
 }

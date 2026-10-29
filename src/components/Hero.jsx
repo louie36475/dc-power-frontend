@@ -95,11 +95,11 @@ export default function Hero() {
         <div className="hero-stats-bar">
         <div className="wrap stat-row">
           <div className="stat-card">
-            <div className="stat-num mono">500+ kWp</div>
+            <div className="stat-num mono">3.7 MW</div>
             <div className="stat-label">installed capacity</div>
           </div>
           <div className="stat-card">
-            <div className="stat-num mono">1,200+</div>
+            <div className="stat-num mono">1,350+</div>
             <div className="stat-label">homes &amp; businesses powered</div>
           </div>
           <div className="stat-card">

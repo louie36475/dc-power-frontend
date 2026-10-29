@@ -188,3 +188,15 @@
     padding: 100px 0 70px;
   }
 }
+/* Font ng Hero lang */
+.hero h1,
+.hero .stat-num {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+.hero .lead,
+.hero .stat-label,
+.hero .btn,
+.hero .hero-eyebrow {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+}

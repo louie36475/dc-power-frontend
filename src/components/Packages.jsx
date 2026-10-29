@@ -3,15 +3,6 @@ import './Packages.css';
 
 const TITLE = 'Package Pricing';
 
-// Placeholder lang ito. 0 = walang interes. Palitan kapag alam mo na ang totoong financing.
-const INTEREST_RATE = 0; // taunang interes, hal. 0.12 = 12%
-const TERMS = [0, 12, 24, 36]; // 0 = cash
-
-const TYPES = [
-  { id: 'hybrid', label: 'Hybrid (with battery)' },
-  { id: 'grid', label: 'Grid-Tie' },
-];
-
 const INCLUDES = {
   hybrid: [
     'Solar panels',
@@ -30,31 +21,23 @@ const INCLUDES = {
 };
 
 // price = numero lang (walang ₱ o comma). battery: 0 = walang battery
+// Naka-pares ayon sa laki: Hybrid at Grid-Tie na magkatabi
 const PACKAGES = [
-  // Hybrid
-  { id: '6kw',  type: 'hybrid', name: '6kW Hybrid System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 10, blurb: 'Entry-level hybrid for smaller homes.',        price: 280000, popular: true },
-  { id: '8kw',  type: 'hybrid', name: '8kW Hybrid System',  panels: '10 × 600W', kwp: '6 kWp', battery: 10, blurb: 'Our most popular size for Filipino homes.',    price: 340000, popular: false },
-  { id: '12kw', type: 'hybrid', name: '12kW Hybrid System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 16, blurb: 'Larger households or small businesses.',       price: 420000, popular: false },
-  // Grid-tie (placeholder: parehong presyo ng hybrid)
-  { id: 'g6',   type: 'grid',   name: '6kW Grid-Tie System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 0, blurb: 'Lower your bill with solar, no battery.',      price: 160000, popular: false },
-  { id: 'g8',   type: 'grid',   name: '8kW Grid-Tie System',  panels: '10 × 600W', kwp: '6 kWp', battery: 0, blurb: 'A popular size for homes with daytime use.',   price: 200000, popular: true },
-  { id: 'g12',  type: 'grid',   name: '12kW Grid-Tie System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 0, blurb: 'Larger households or small businesses.',       price: 300000, popular: false },
+  { id: '6kw',  type: 'hybrid', name: '6kW Hybrid System',    panels: '8 × 600W',  kwp: '4.8 kWp', battery: 10, blurb: 'Entry-level hybrid for smaller homes.',        price: 280000, popular: true },
+  { id: 'g6',   type: 'grid',   name: '6kW Grid-Tie System',  panels: '8 × 600W',  kwp: '4.8 kWp', battery: 0,  blurb: 'Lower your bill with solar, no battery.',      price: 160000, popular: false },
+  { id: '8kw',  type: 'hybrid', name: '8kW Hybrid System',    panels: '10 × 600W', kwp: '6.0 kWp', battery: 10, blurb: 'Our most popular size for Filipino homes.',    price: 340000, popular: false },
+  { id: 'g8',   type: 'grid',   name: '8kW Grid-Tie System',  panels: '10 × 600W', kwp: '6.0 kWp', battery: 0,  blurb: 'A popular size for homes with daytime use.',   price: 200000, popular: false },
+  { id: '12kw', type: 'hybrid', name: '12kW Hybrid System',   panels: '16 × 600W', kwp: '9.6 kWp', battery: 16, blurb: 'Larger households or small businesses.',       price: 420000, popular: false },
+  { id: 'g12',  type: 'grid',   name: '12kW Grid-Tie System', panels: '16 × 600W', kwp: '9.6 kWp', battery: 0,  blurb: 'Larger households or small businesses.',       price: 300000, popular: false },
 ];
 
 const ADDONS = [
   { id: 'battery', name: 'Extra Battery Module',    specs: '5.12kWh LiFePO4',                             price: 95000, from: true,  hybridOnly: true },
-  { id: 'panels',  name: 'Additional Solar Panels', specs: '1 × 600W, mounting + cable + labor included', price: 7000, from: false, hybridOnly: false },
+  { id: 'panels',  name: 'Additional Solar Panels', specs: '1 × 600W', price: 7000, from: false, hybridOnly: false },
 ];
 
 const fmt = (n) => '₱' + Math.round(n).toLocaleString('en-PH');
 const batteryText = (b) => (b ? `${b} kWh` : 'None');
-
-const monthly = (total, months) => {
-  if (!months) return total;
-  const r = INTEREST_RATE / 12;
-  if (!r) return total / months;
-  return (total * r) / (1 - Math.pow(1 + r, -months));
-};
 
 const popularIndex = (list) => Math.max(0, list.findIndex((p) => p.popular));
 
@@ -62,22 +45,19 @@ export default function Packages() {
   const rootRef = useRef(null);
   const headRef = useRef(null);
   const touchX = useRef(null);
-  const [type, setType] = useState('hybrid');
-  const [active, setActive] = useState(popularIndex(PACKAGES.filter((p) => p.type === 'hybrid')));
-  const [term, setTerm] = useState(0);
+  const [active, setActive] = useState(popularIndex(PACKAGES));
   const [picked, setPicked] = useState([]);
   const [shown, setShown] = useState(false);
 
-  const list = PACKAGES.filter((p) => p.type === type);
+  const list = PACKAGES;
   const n = list.length;
-  const addons = ADDONS.filter((a) => !a.hybridOnly || type === 'hybrid');
 
-  const go = (dir) => setActive((i) => (i + dir + n) % n);
-
-  const changeType = (t) => {
-    if (t === type) return;
-    setType(t);
-    setActive(popularIndex(PACKAGES.filter((p) => p.type === t)));
+  const go = (dir) => {
+    setActive((i) => (i + dir + n) % n);
+    setPicked([]);
+  };
+  const selectPkg = (i) => {
+    setActive(i);
     setPicked([]);
   };
 
@@ -136,6 +116,7 @@ export default function Packages() {
   };
 
   const pkg = list[active];
+  const addons = ADDONS.filter((a) => !a.hybridOnly || pkg.type === 'hybrid');
   const chosen = addons.filter((a) => picked.includes(a.id));
   const addonTotal = chosen.reduce((s, a) => s + a.price, 0);
   const total = pkg.price + addonTotal;
@@ -146,7 +127,6 @@ export default function Packages() {
       package: pkg.name,
       addons: chosen.map((a) => a.name),
       total,
-      term: term ? `${term} months` : 'Cash',
     };
     try { sessionStorage.setItem('dc-package', JSON.stringify(detail)); } catch (e) { /* okay lang */ }
     window.dispatchEvent(new CustomEvent('dc:package-selected', { detail }));
@@ -182,26 +162,9 @@ export default function Packages() {
           <a href="#pk-compare" className="pk-more">Compare packages ↓</a>
         </div>
 
-        {/* Type toggle */}
-        <div className="pk-type" role="tablist" aria-label="System type">
-          {TYPES.map((t) => (
-            <button
-              key={t.id}
-              type="button"
-              role="tab"
-              aria-selected={type === t.id}
-              className={`pk-type-btn ${type === t.id ? 'active' : ''}`}
-              onClick={() => changeType(t.id)}
-            >
-              {t.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Coverflow */}
+        {/* Coverflow: Hybrid at Grid-Tie sa iisang carousel */}
         <div
           className="pk-stage"
-          key={type}
           tabIndex={0}
           onKeyDown={onKeyDown}
           onTouchStart={onTouchStart}
@@ -216,20 +179,21 @@ export default function Packages() {
             return (
               <div
                 key={p.id}
-                className={`pk-card has-art ${p.type === 'grid' ? 'art-grid' : 'art-hybrid'} ${isActive ? 'is-active' : ''} ${p.popular ? 'is-popular' : ''}`}style={{
+                className={`pk-card has-art ${p.type === 'grid' ? 'art-grid' : 'art-hybrid'} ${isActive ? 'is-active' : ''} ${p.popular ? 'is-popular' : ''}`}
+                style={{
                   '--d': d,
                   '--abs': Math.min(abs, 3),
                   zIndex: 10 - abs,
                   opacity: abs > 2 ? 0 : isActive ? 1 : 0.6,
                   pointerEvents: abs > 2 ? 'none' : 'auto',
                 }}
-                onClick={() => !isActive && setActive(i)}
+                onClick={() => !isActive && selectPkg(i)}
                 onMouseMove={isActive ? tilt : undefined}
                 onMouseLeave={isActive ? untilt : undefined}
                 onKeyDown={(e) => {
                   if (!isActive && (e.key === 'Enter' || e.key === ' ')) {
                     e.preventDefault();
-                    setActive(i);
+                    selectPkg(i);
                   }
                 }}
                 role={isActive ? 'group' : 'button'}
@@ -237,6 +201,9 @@ export default function Packages() {
                 aria-label={isActive ? p.name : `Show ${p.name}`}
               >
                 {p.popular && <div className="pk-badge">Popular</div>}
+                <span className={`pk-kind ${p.type}`}>
+                  {p.type === 'hybrid' ? 'Hybrid · with battery' : 'Grid-Tie · no battery'}
+                </span>
 
                 <h3>{p.name}</h3>
                 <p className="pk-specs">
@@ -276,35 +243,15 @@ export default function Packages() {
               aria-selected={i === active}
               aria-label={p.name}
               className={`pk-dot ${i === active ? 'active' : ''}`}
-              onClick={() => setActive(i)}
+              onClick={() => selectPkg(i)}
             />
           ))}
         </div>
 
-        {/* Customize: financing + add-ons + total */}
+        {/* Customize: add-ons + total */}
         <div className="pk-build">
           <div className="pk-build-col">
-            <h4>Payment option</h4>
-            <div className="pk-chips" role="radiogroup" aria-label="Payment option">
-              {TERMS.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  role="radio"
-                  aria-checked={term === t}
-                  className={`pk-chip ${term === t ? 'active' : ''}`}
-                  onClick={() => setTerm(t)}
-                >
-                  {t ? `${t} months` : 'Cash'}
-                </button>
-              ))}
-            </div>
-            <p className="pk-fine">
-              Estimate lang ito{INTEREST_RATE ? ` (${Math.round(INTEREST_RATE * 100)}% interes kada taon)` : ' (walang interes)'}.
-              Ang totoong financing ay depende sa provider at sa approval.
-            </p>
-
-            <h4 className="pk-h4-gap">Add-ons</h4>
+            <h4>Add-ons</h4>
             <div className="pk-addons">
               {addons.map((a) => (
                 <label key={a.id} className={`pk-addon ${picked.includes(a.id) ? 'on' : ''}`}>
@@ -336,12 +283,6 @@ export default function Packages() {
               <span className="pk-total-num mono">{fmt(total)}</span>
             </div>
 
-            {term > 0 && (
-              <div className="pk-monthly">
-                ≈ <strong className="mono">{fmt(monthly(total, term))}</strong> / month for {term} months
-              </div>
-            )}
-
             <a href="#contact" className="btn btn-primary pk-cta" onClick={requestPackage}>
               Request this package
             </a>
@@ -350,12 +291,13 @@ export default function Packages() {
 
         {/* Compare */}
         <div className="pk-compare" id="pk-compare">
-          <h4>Compare {type === 'hybrid' ? 'hybrid' : 'grid-tie'} packages</h4>
+          <h4>Compare all packages</h4>
           <div className="pk-table-wrap">
             <table className="pk-table">
               <thead>
                 <tr>
                   <th>Package</th>
+                  <th>Type</th>
                   <th>Panels</th>
                   <th>System size</th>
                   <th>Battery</th>
@@ -367,12 +309,13 @@ export default function Packages() {
                   <tr
                     key={p.id}
                     className={i === active ? 'on' : ''}
-                    onClick={() => setActive(i)}
+                    onClick={() => selectPkg(i)}
                   >
                     <td>
                       {p.name}
                       {p.popular && <span className="pk-mini">Popular</span>}
                     </td>
+                    <td>{p.type === 'hybrid' ? 'Hybrid' : 'Grid-Tie'}</td>
                     <td>{p.panels}</td>
                     <td>{p.kwp}</td>
                     <td>{batteryText(p.battery)}</td>
