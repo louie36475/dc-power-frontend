@@ -2,18 +2,15 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo/full-logo.png';
 import './Footer.css';
+import { TEAMS } from '../data/teams';
 
 // ===================== EDIT THESE =====================
-const PHONE_DISPLAY = '+63 900 000 0000';
-const PHONE_LINK = '+639000000000'; // digits only
+const PHONE_DISPLAY = '+63 920 700 1600';
+const PHONE_LINK = '+639207001600'; // digits only
 const EMAIL = 'dcpowersolar@gmail.com';
 const HOURS = 'Mon to Sat, 8:00 AM to 5:00 PM'; // palitan ng totoong oras
 const FACEBOOK_URL = ''; // ilagay ang link ng Facebook page mo; kapag walang laman, hindi lalabas
-const TEAMS = [
-  { name: 'Techsolutions', city: 'Dagupan City' },
-  { name: 'DC Power', city: 'Malasiqui' },
-];
-// ======================================================
+
 
 const EXPLORE = [
   { to: '/#services', label: 'How It Works' },
@@ -29,8 +26,8 @@ export default function Footer() {
   const [areaOpen, setAreaOpen] = useState(false);
 
   return (
-  <footer id="footer">
-    <div className="wrap">
+    <footer id="footer">
+      <div className="wrap">
         <div className="footer-grid">
           {/* Brand */}
           <div className="footer-brand">
@@ -114,9 +111,9 @@ export default function Footer() {
               <div id="area-list" className="area-list-wrap">
                 <ul className="area-list">
                   {TEAMS.map((t) => (
-                    <li key={`${t.name}-${t.city}`}>
+                    <li key={t.name}>
                       <span className="area-team">{t.name}</span>
-                      <span className="area-city">{t.city}</span>
+                      {t.city && <span className="area-city">{t.city}</span>}
                     </li>
                   ))}
                 </ul>
@@ -126,7 +123,7 @@ export default function Footer() {
         </div>
 
         <div className="footer-bottom">
-          <span>© {2012} DC Power. All rights reserved.</span>
+          <span>© {year} DC Power. All rights reserved.</span>
           <span>Serving homes and businesses across Luzon.</span>
         </div>
       </div>

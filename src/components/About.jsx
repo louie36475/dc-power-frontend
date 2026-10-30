@@ -2,14 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './About.css';
+import { TEAMS } from '../data/teams';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Palitan o dagdagan mo lang ito. Isang block = isang team.
-const TEAMS = [
-  { name: 'Techsolutions', city: 'Dagupan City' },
-  { name: 'DC Power', city: 'Malasiqui' },
-];
+
+
 
 // action: 'teams' = clickable, magbubukas yung dropdown ng teams
 const FACTS = [
@@ -133,7 +131,7 @@ export default function About() {
                   <div id="teams-dropdown" className={`teams-dropdown ${showTeams ? 'open' : ''}`}>
                     <ul className="teams-list">
                       {TEAMS.map((t) => (
-                        <li className="team-item" key={`${t.name}-${t.city}`}>
+                        <li className="team-item" key={t.name}>
                           <span className="team-pin" aria-hidden="true">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                               <path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
@@ -141,7 +139,7 @@ export default function About() {
                             </svg>
                           </span>
                           <span className="team-name">{t.name}</span>
-                          <span className="team-city">{t.city}</span>
+                          {t.city && <span className="team-city">{t.city}</span>}
                         </li>
                       ))}
                     </ul>

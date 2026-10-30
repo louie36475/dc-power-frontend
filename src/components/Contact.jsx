@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SizeCalculator from './SizeCalculator';
+import BuildPicker from './BuildPicker';
 import './Contact.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -9,8 +10,8 @@ gsap.registerPlugin(ScrollTrigger);
 // ===================== EDIT THESE =====================
 const FORM_ENDPOINT = 'https://api.web3forms.com/submit';
 const ACCESS_KEY = '1d65e651-b3e4-4d3c-a73f-88256621d203';
-const PHONE_DISPLAY = '+63 900 000 0000';
-const PHONE_LINK = '+639000000000'; // digits only, no spaces
+const PHONE_DISPLAY = '+63 920 700 1600';
+const PHONE_LINK = '+639207001600'; // digits only, no spaces
 const EMAIL = 'dcpowersolar@gmail.com';
 const TIMELINES = [
   'As soon as possible',
@@ -38,9 +39,9 @@ export default function Contact() {
   const [visitTime, setVisitTime] = useState('');
   const [timeline, setTimeline] = useState('');
   const [estimate, setEstimate] = useState(null);
+  const [build, setBuild] = useState(null); // galing sa BuildPicker
   const [status, setStatus] = useState('idle'); // idle | sending | success | error
 
-  const hasEstimate = !!estimate;
   const reduceMotion = () =>
     window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -55,34 +56,16 @@ export default function Contact() {
     const ctx = gsap.context(() => {
       const once = (trigger, start = 'top 88%') => ({ trigger, start, once: true });
 
-      // Heading: sunod-sunod
       gsap.fromTo(
         '.ct-head > *',
         { y: 28, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.14,
-          ease: 'power3.out',
-          scrollTrigger: once('.ct-head'),
-        }
+        { y: 0, opacity: 1, duration: 0.8, stagger: 0.14, ease: 'power3.out', scrollTrigger: once('.ct-head') }
       );
-
-      // Gold na linya
       gsap.fromTo(
         '.ct-line',
         { scaleX: 0 },
-        {
-          scaleX: 1,
-          duration: 1,
-          delay: 0.4,
-          ease: 'power3.out',
-          scrollTrigger: once('.ct-head'),
-        }
+        { scaleX: 1, duration: 1, delay: 0.4, ease: 'power3.out', scrollTrigger: once('.ct-head') }
       );
-
-      // Calculator at quote card
       gsap.fromTo(
         '.calc-card',
         { y: 48, opacity: 0 },
@@ -93,52 +76,21 @@ export default function Contact() {
         { y: 48, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.9, ease: 'power3.out', scrollTrigger: once('.quote-card', 'top 90%') }
       );
-
-      // Mga field ng form: isa-isa
-      gsap.fromTo(
-        '.quote-card form > .field, .quote-card form > .field-row',
-        { y: 18, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.08,
-          ease: 'power2.out',
-          scrollTrigger: once('.quote-card form', 'top 85%'),
-        }
-      );
-
-      // Phone at email
       gsap.fromTo(
         '.contact-info-item',
         { y: 16, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.6,
-          stagger: 0.12,
-          ease: 'power2.out',
-          scrollTrigger: once('.contact-info', 'top 95%'),
-        }
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.12, ease: 'power2.out', scrollTrigger: once('.contact-info', 'top 95%') }
       );
-
-      // Mahinang parallax ng ilaw sa background
       gsap.to('.ct-glow', {
         yPercent: -40,
         ease: 'none',
-        scrollTrigger: {
-          trigger: rootRef.current,
-          start: 'top bottom',
-          end: 'bottom top',
-          scrub: true,
-        },
+        scrollTrigger: { trigger: rootRef.current, start: 'top bottom', end: 'bottom top', scrub: true },
       });
     }, rootRef);
 
     const refresh = () => ScrollTrigger.refresh();
-window.addEventListener('load', refresh);
-const timer = setTimeout(refresh, 400);
-const timer2 = setTimeout(refresh, 1500);
+    window.addEventListener('load', refresh);
+    const timer = setTimeout(refresh, 400);
 
     return () => {
       window.removeEventListener('load', refresh);
@@ -146,18 +98,6 @@ const timer2 = setTimeout(refresh, 1500);
       ctx.revert();
     };
   }, []);
-
-  // Maliit na "pop" kapag lumabas ang estimate
-  useEffect(() => {
-    if (!hasEstimate || reduceMotion()) return;
-    const el = rootRef.current?.querySelector('.quote-estimate');
-    if (!el) return;
-    gsap.fromTo(
-      el,
-      { y: 10, opacity: 0, scale: 0.98 },
-      { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: 'back.out(1.6)' }
-    );
-  }, [hasEstimate]);
 
   // Success / error message
   useEffect(() => {
@@ -168,6 +108,7 @@ const timer2 = setTimeout(refresh, 1500);
     gsap.fromTo(el, { y: -8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' });
   }, [status]);
 
+  // Estimate galing sa calculator, para sa email
   const estimateFields = estimate
     ? {
         estimate_system_size: `${estimate.kwp} kWp`,
@@ -179,6 +120,17 @@ const timer2 = setTimeout(refresh, 1500);
         estimate_battery: `${estimate.batteryLabel} (about ${estimate.batteryKwh} kWh)`,
       }
     : { estimate_system_size: 'Customer did not use the calculator' };
+
+  // Pinili ng customer (package o custom), para sa email
+  const buildFields = build
+    ? {
+        build_type: build.mode,
+        build_details: build.details,
+        build_estimated_total: `PHP ${Math.round(build.total)}${build.unpriced ? ' (batteries not priced yet)' : ''}`,
+        build_future_appliances_kwh_per_month: build.extraKwh || 'None',
+        build_warnings: build.warnings.length ? build.warnings.join(' | ') : 'None',
+      }
+    : {};
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -195,6 +147,7 @@ const timer2 = setTimeout(refresh, 1500);
           ocular_visit_time: visitTime || 'Not specified',
           install_timeline: timeline || 'Not specified',
           ...estimateFields,
+          ...buildFields,
         }),
       });
       if (!res.ok) throw new Error('Request failed');
@@ -229,31 +182,8 @@ const timer2 = setTimeout(refresh, 1500);
             <p>Leave your details and we'll get back to you — usually within one business day.</p>
           </div>
 
-          {estimate ? (
-            <div className="quote-estimate">
-              <div className="quote-estimate-title">Your estimate (sent with your request)</div>
-              <div className="quote-estimate-grid">
-                <div>
-                  <span className="quote-estimate-num mono">{estimate.kwp} kWp</span>
-                  <span className="quote-estimate-label">system size</span>
-                </div>
-                <div>
-                  <span className="quote-estimate-num mono">{estimate.panels}</span>
-                  <span className="quote-estimate-label">panels</span>
-                </div>
-                <div>
-                  <span className="quote-estimate-num mono">
-                    {estimate.batteryLabel} · ~{estimate.batteryKwh} kWh
-                  </span>
-                  <span className="quote-estimate-label">battery</span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <p className="quote-estimate-hint">
-              Tip: fill in the calculator above first, and we'll receive your system size with your request.
-            </p>
-          )}
+          {/* Dito pinapalitan ang dating estimate box */}
+          <BuildPicker estimate={estimate} onChange={setBuild} />
 
           <form onSubmit={handleSubmit}>
             <div className="field-row">
@@ -294,11 +224,7 @@ const timer2 = setTimeout(refresh, 1500);
                 value={visitDate}
                 onChange={(e) => setVisitDate(e.target.value)}
               />
-              <div
-                className="quote-chips quote-chips--time"
-                role="radiogroup"
-                aria-label="Preferred time of ocular visit"
-              >
+              <div className="quote-chips quote-chips--time" role="radiogroup" aria-label="Preferred time of ocular visit">
                 {VISIT_TIMES.map((t) => (
                   <button
                     key={t}

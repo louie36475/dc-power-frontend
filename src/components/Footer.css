@@ -227,3 +227,7 @@ footer .footer-sub,
 footer .area-city {
   color: #3d2c28;
 }
+.area-dropdown.open .area-list {
+  max-height: 260px;
+  overflow-y: auto;
+}

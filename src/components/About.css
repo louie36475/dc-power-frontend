@@ -159,3 +159,7 @@
   .team-item { flex-wrap: wrap; }
   .team-city { margin-left: 44px; text-align: left; width: 100%; }
 }
+.teams-dropdown.open .teams-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
