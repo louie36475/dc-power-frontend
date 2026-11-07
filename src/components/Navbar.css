@@ -289,3 +289,7 @@
 .header.is-page {
   background: #ffffff;
 }
+/* Para hindi masira ang layout kapag may toggle at decor */
+.brand { position: relative; }
+.nav-actions { flex-wrap: nowrap; white-space: nowrap; }
+.nav > * { min-width: 0; }

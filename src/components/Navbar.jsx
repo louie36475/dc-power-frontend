@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo/full-logo.png';
+import { XmasToggle, XmasNavDecor, XmasHat } from './Xmas';
 import './Navbar.css';
 
 const ABOUT_DROPDOWN = [
@@ -31,8 +32,6 @@ export default function Navbar() {
     setAboutOpen(false);
   }, [location.pathname]);
 
-  // Home: glass over the video, turns more solid after scrolling.
-  // Other pages: always solid, since there's no video behind it.
   const solid = scrolled || !isHome;
 
   const closeAll = () => {
@@ -45,8 +44,11 @@ export default function Navbar() {
       className={`header ${solid ? 'solid' : 'transparent'} ${isHome ? 'is-home' : 'is-page'}`}
     >
       <nav className="nav">
+        <XmasNavDecor />
+
         <Link to="/" className="brand" onClick={closeAll}>
           <img src={logo} alt="DC Power logo" className="brand-mark" />
+          <XmasHat />
           <span className="brand-text">DC Power</span>
         </Link>
 
@@ -89,9 +91,10 @@ export default function Navbar() {
           </div>
 
           <div className="nav-actions">
+            <XmasToggle />
             <Link to="/#contact" className="btn btn-primary nav-quote" onClick={closeAll}>
-                Request a Free Quote
-</Link>
+              Request a Free Quote
+            </Link>
           </div>
         </div>
 

@@ -4,6 +4,7 @@ import logo from '../assets/logo/full-logo.png';
 import './Footer.css';
 import { TEAMS } from '../data/teams';
 
+
 // ===================== EDIT THESE =====================
 const PHONE_DISPLAY = '+63 920 700 1600';
 const PHONE_LINK = '+639207001600'; // digits only

@@ -1,0 +1,174 @@
+/* Nakatago kapag off ang Christmas mode */
+.xn,
+.xn-hat { display: none; }
+.xmas .xn { display: block; }
+.xmas .xn-hat { display: block; }
+
+/* Sumasabog na particles */
+.xmas-particle {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  font-size: 18px;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+
+/* 🎄 Toggle */
+.xmas-toggle {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #e3d3cc;
+  border-radius: 50%;
+  background: #fff;
+  font-size: 1.1rem;
+  cursor: pointer;
+  filter: grayscale(1);
+  opacity: 0.7;
+  transition: transform 0.2s var(--ease), filter 0.2s var(--ease), opacity 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+.xmas-toggle.on {
+  filter: none;
+  opacity: 1;
+  box-shadow: 0 0 0 3px rgba(198, 40, 40, 0.18);
+}
+.xmas-toggle:hover { transform: scale(1.1); }
+
+/* Overlay ng navbar */
+.xn { border-radius: inherit; }
+.xn-snow {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 999px;
+}
+.xn-flake {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: 10px;
+  color: #90caf9;
+  opacity: 0;
+}
+
+/* Snow cap sa taas ng pill */
+.xn-cap {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  top: -3px;
+  height: 9px;
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 10px 0, #fff 6px, transparent 7px) 0 0 / 34px 9px repeat-x,
+    linear-gradient(#fff, #fff) 0 0 / 100% 4px no-repeat;
+  filter: drop-shadow(0 1px 1px rgba(43, 18, 24, 0.15));
+}
+
+/* String lights */
+.xn-lights {
+  position: absolute;
+  left: 44px;
+  right: 44px;
+  top: -10px;
+  height: 14px;
+}
+.xn-wire {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 14px;
+  pointer-events: none;
+}
+.xn-bulb {
+  --col: #e53935;
+  position: absolute;
+  width: 11px;
+  height: 15px;
+  margin-left: -5px;
+  padding: 0;
+  border: none;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: var(--col);
+  box-shadow: 0 0 10px var(--col);
+  cursor: pointer;
+  pointer-events: auto;
+}
+.xn-bulb::before {
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  width: 6px;
+  height: 5px;
+  margin-left: -3px;
+  border-radius: 2px;
+  background: #5a3b2e;
+}
+.xn-bulb[data-c='0'] { --col: #e53935; }
+.xn-bulb[data-c='1'] { --col: #f2b448; }
+.xn-bulb[data-c='2'] { --col: #43a047; }
+.xn-bulb[data-c='3'] { --col: #42a5f5; }
+
+/* Santa hat sa logo */
+.xn-hat {
+  position: absolute;
+  top: -14px;
+  left: -8px;
+  z-index: 3;
+  transform-origin: 70% 90%;
+  transform: rotate(-14deg);
+  transition: transform 0.35s var(--ease);
+  pointer-events: none;
+}
+.brand:hover .xn-hat { transform: rotate(6deg) scale(1.1); }
+
+/* Navbar na may Xmas na kulay */
+.xmas .header .nav::before {
+  border-color: rgba(198, 40, 40, 0.28);
+  box-shadow:
+    0 8px 30px rgba(10, 20, 35, 0.12),
+    0 0 0 1px rgba(46, 125, 50, 0.14);
+}
+.xmas .nav-center > a:hover,
+.xmas .nav-dropdown-trigger:hover,
+.xmas .nav-dropdown.open .nav-dropdown-trigger {
+  color: #c62828;
+}
+.xmas .nav-dropdown-trigger.active { color: #c62828; }
+
+/* Quote button: pula, may sikat na dumadaan */
+.xmas .nav .nav-quote {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #d32f2f, #b71c1c);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(198, 40, 40, 0.4);
+}
+.xmas .nav .nav-quote::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40%;
+  left: -60%;
+  background: linear-gradient(105deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  animation: xn-shine 3.6s ease-in-out infinite;
+}
+@keyframes xn-shine {
+  0%, 60% { left: -60%; }
+  100%    { left: 130%; }
+}
+
+@media (max-width: 900px) {
+  .xn-lights { left: 30px; right: 30px; }
+  .xn-cap { left: 36px; right: 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .xmas .nav .nav-quote::after { animation: none; display: none; }
+  .xn-hat { transition: none; }
+}

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { PACKAGES } from '../data/packages';
 import './Packages.css';
 
+
 const TITLE = 'Package Pricing';
 
 const INCLUDES = {
