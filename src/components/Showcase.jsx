@@ -4,17 +4,17 @@ import './Showcase.css';
 
 // Nasaan ang photos sa "public" folder. '/' = directly sa public.
 const FOLDER = '/';
-const TITLE = 'Showcase';
+const TITLE = 'Work Gallery';
 const AUTOPLAY_MS = 4500;
 
-// Palitan mo ang title at desc ng totoong details. Idagdag o bawasan mo lang ang list.
+// title ay para sa alt text ng picture lang (hindi lumalabas sa screen)
 const SLIDES = [
-  { file: 'image 8.png',  title: 'Rooftop Solar Installation', desc: 'Isulat dito ang maikling kwento ng project.' },
-  { file: 'image 9.png',  title: 'Hybrid Inverter & Battery',  desc: 'Isulat dito ang maikling kwento ng project.' },
-  { file: 'image 10.png', title: 'Residential Solar System',   desc: 'Isulat dito ang maikling kwento ng project.' },
-  { file: 'image 11.png', title: 'Rooftop Panel Array',        desc: 'Isulat dito ang maikling kwento ng project.' },
-  { file: 'image 12.png', title: 'Home Backup System',         desc: 'Isulat dito ang maikling kwento ng project.' },
-  { file: 'image 13.png', title: 'Solar + Battery Setup',      desc: 'Isulat dito ang maikling kwento ng project.' },
+  { file: 'image 8.png',  title: 'Rooftop Solar Installation' },
+  { file: 'image 9.png',  title: 'Hybrid Inverter & Battery' },
+  { file: 'image 10.png', title: 'Residential Solar System' },
+  { file: 'image 11.png', title: 'Rooftop Panel Array' },
+  { file: 'image 12.png', title: 'Home Backup System' },
+  { file: 'image 13.png', title: 'Solar + Battery Setup' },
 ];
 
 const src = (file) => encodeURI(FOLDER + file);
@@ -75,8 +75,6 @@ export default function Showcase() {
     return d;
   };
 
-  const current = SLIDES[active];
-
   return (
     <section id="showcase" ref={rootRef}>
       {/* Wavy lines sa background */}
@@ -89,7 +87,7 @@ export default function Showcase() {
       <div className="wrap">
         <div className="sc-head">
           <div>
-            <div className="sc-eyebrow"></div>
+            <div className="sc-eyebrow">SELECTED WORK</div>
             <h2 className="sc-title">
               {typed}
               <span className="sc-cursor" aria-hidden="true" />
@@ -137,12 +135,6 @@ export default function Showcase() {
               </button>
             );
           })}
-        </div>
-
-        {/* Caption ng napiling picture */}
-        <div className="sc-caption" key={active}>
-          <h3>{current.title}</h3>
-          <p>{current.desc}</p>
         </div>
 
         {/* Dots */}
